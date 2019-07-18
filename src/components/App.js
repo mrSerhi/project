@@ -1,7 +1,8 @@
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 
 // components
 import Form from "./Form/Form";
+import ListOfItems from "./ListOfItems/ListOfItems";
 
 class App extends Component {
   state = { items: [] };
@@ -11,7 +12,14 @@ class App extends Component {
     this.setState({ items });
   };
   render() {
-    return <Form mapTitleToItems={this.mapTitleToItems} />;
+    const { items } = this.state;
+    return (
+      <Fragment>
+        <Form mapTitleToItems={this.mapTitleToItems} />
+
+        <ListOfItems items={items} />
+      </Fragment>
+    );
   }
 }
 
