@@ -1,11 +1,18 @@
-import React from "react";
+import React, { Component } from "react";
 
-function App() {
-  return (
-    <div className="App">
-      <h3>React Form</h3>
-    </div>
-  );
+// components
+import Form from "./Form/Form";
+
+class App extends Component {
+  state = { items: [] };
+
+  mapTitleToItems = item => {
+    const items = [...this.state.items, item];
+    this.setState({ items });
+  };
+  render() {
+    return <Form mapTitleToItems={this.mapTitleToItems} />;
+  }
 }
 
 export default App;
