@@ -26,14 +26,16 @@ class Form extends Component {
   render() {
     const { title } = this.state;
     return (
-      <form onSubmit={this.handleOnSubmit}>
-        <FormInput
-          name="title"
-          value={title}
-          placeholder="You can add yours title"
-          onChange={this.handleOnChange}
-        />
-      </form>
+      <div className="card card-body mt-5 bg-light">
+        <form onSubmit={this.handleOnSubmit}>
+          <FormInput
+            name="title"
+            value={title}
+            placeholder="You can add yours title"
+            onChange={this.handleOnChange}
+          />
+        </form>
+      </div>
     );
   }
 }

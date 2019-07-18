@@ -3,12 +3,21 @@ import PropTypes from "prop-types";
 
 const ListOfItems = ({ items }) => {
   const renderingItems = () => {
-    if (items.length === 0) return <h3>No one titles is found...</h3>;
+    if (items.length === 0)
+      return (
+        <h3 className="text-center text-info">No one titles is found...</h3>
+      );
 
-    return items.map(item => <li key={item.id}>{item.title}</li>);
+    return items.map(item => {
+      return (
+        <li key={item.id} className="list-group-item">
+          {item.title}
+        </li>
+      );
+    });
   };
 
-  return <ul>{renderingItems()}</ul>;
+  return <ul className="list-group mt-5">{renderingItems()}</ul>;
 };
 
 ListOfItems.propTypes = {

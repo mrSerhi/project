@@ -9,6 +9,7 @@ const FormInput = ({ name, onChange, value, placeholder, type }) => {
       value={value}
       placeholder={placeholder}
       type={type}
+      className="form-control"
     />
   );
 };

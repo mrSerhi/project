@@ -14,11 +14,15 @@ class App extends Component {
   render() {
     const { items } = this.state;
     return (
-      <Fragment>
-        <Form mapTitleToItems={this.mapTitleToItems} />
+      <div className="container">
+        <div className="row">
+          <div className="col-sm-6 m-auto">
+            <Form mapTitleToItems={this.mapTitleToItems} />
 
-        <ListOfItems items={items} />
-      </Fragment>
+            <ListOfItems items={items} />
+          </div>
+        </div>
+      </div>
     );
   }
 }
