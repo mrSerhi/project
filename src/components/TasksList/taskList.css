@@ -1,0 +1,17 @@
+.task-done {
+  position: relative;
+  text-decoration: line-through;
+  color: rgba(214, 211, 211, 0.5);
+  overflow: hidden;
+  transition: all 0.4s ease-in;
+}
+
+.task-done::after {
+  position: absolute;
+  top: 0;
+  left: 0;
+  content: "done!";
+  font-weight: 700;
+  color: rgb(45, 204, 45);
+  text-decoration: none;
+}
