@@ -19,7 +19,8 @@ class AddTaskForm extends Component {
     e.preventDefault();
     const newTask = {
       id: uuid(),
-      title: this.state.title
+      title: this.state.title,
+      done: false
     };
     this.props.handleAddTask(newTask);
 
