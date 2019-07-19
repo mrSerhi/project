@@ -8,7 +8,12 @@ class AddTaskForm extends Component {
     handleAddTask: PropTypes.func.isRequired
   };
 
-  state = { title: "" };
+  constructor(props) {
+    super(props);
+    this.state = { title: "" };
+
+    this.input = React.createRef();
+  }
 
   addTaskOnSubmit = e => {
     e.preventDefault();
@@ -20,6 +25,7 @@ class AddTaskForm extends Component {
 
     // clear input field
     this.setState({ title: "" });
+    this.input.current.focus();
   };
 
   handleTitleChanges = e => this.setState({ title: e.target.value });
@@ -36,6 +42,7 @@ class AddTaskForm extends Component {
                 aria-describedby="basic-addon2"
                 onChange={this.handleTitleChanges}
                 value={this.state.title}
+                ref={this.input}
               />
               <InputGroup.Append>
                 <Button variant="primary" type="submit">
