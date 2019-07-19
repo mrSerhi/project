@@ -1,6 +1,8 @@
 import React from "react";
 import { ListGroup, Button } from "react-bootstrap";
 import PropTypes from "prop-types";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTrash } from "@fortawesome/free-solid-svg-icons";
 
 const TasksListGroup = ({ tasks, handleRemoveTask }) => {
   return (
@@ -17,7 +19,7 @@ const TasksListGroup = ({ tasks, handleRemoveTask }) => {
             variant="danger"
             size="sm"
           >
-            x
+            <FontAwesomeIcon icon={faTrash} />
           </Button>
         </ListGroup.Item>
       ))}
