@@ -1,17 +1,26 @@
 .task-done {
   position: relative;
   text-decoration: line-through;
-  color: rgba(214, 211, 211, 0.5);
+  color: rgba(192, 192, 192, 0.7);
   overflow: hidden;
   transition: all 0.4s ease-in;
 }
 
-.task-done::after {
-  position: absolute;
-  top: 0;
-  left: 0;
-  content: "done!";
-  font-weight: 700;
-  color: rgb(45, 204, 45);
-  text-decoration: none;
+.task-item {
+  overflow: hidden;
+}
+
+.task-item:hover .task-remove__button {
+  transform: translateX(0);
+}
+
+.task-remove__button {
+  color: rgb(170, 25, 25);
+  font-size: 1.1rem;
+  transform: translateX(10rem);
+  transition: all 0.4s ease-out;
+}
+
+.task-remove__button:hover {
+  color: rgba(170, 25, 25, 0.7);
 }

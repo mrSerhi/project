@@ -5,7 +5,7 @@ import { Container, Row, Col } from "react-bootstrap";
 import AddTaskForm from "../components/AddTaskForm/AddTaskForm";
 import TasksList from "../components/TasksList/TasksList";
 import SearchTaskForm from "../components/SearchTaskForm/SearchTaskForm";
-import SortTasksButtonGroup from "../components/SortTasks/SortTasksButtonGroup";
+import SortTasksBlock from "../components/SortTasksBlock";
 
 class Todo extends Component {
   state = { tasks: [], searchQuery: "", filter: "all" };
@@ -67,29 +67,36 @@ class Todo extends Component {
   }
 
   render() {
+    const { tasks } = this.state;
+    const activeTasksLength = this.state.tasks.reduce(
+      (sub, curr) => (sub += !curr.done),
+      0
+    );
+
     return (
       <Container className="mt-5">
-        <Row>
-          <Col md={7}>
-            <AddTaskForm handleAddTask={this.addTask} />
-          </Col>
+        {/* <Row> */}
 
-          <Col md={4}>
+        {/* <Col md={4}>
             <SearchTaskForm getSearchQuery={this.addSearchQuery} />
-          </Col>
-        </Row>
+          </Col> */}
+        {/* </Row> */}
 
         <Row>
-          <Col sx={{ span: 7 }}>
+          <Col md={6} className="m-auto">
+            <AddTaskForm handleAddTask={this.addTask} />
             <TasksList
               tasks={this.returnFilteredTaskResult()}
               handleRemoveTask={this.removeTask}
               handleToggleTaskDone={this.toggleTaskDone}
             />
-          </Col>
-
-          <Col>
-            <SortTasksButtonGroup handleGetTaskFilter={this.getTaskFilter} />
+            {tasks.length > 0 && (
+              <SortTasksBlock
+                activeTasksLength={activeTasksLength}
+                handleGetTaskFilter={this.getTaskFilter}
+                selectedFilter={this.state.filter}
+              />
+            )}
           </Col>
         </Row>
       </Container>
