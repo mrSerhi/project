@@ -4,9 +4,10 @@ import { Container, Row, Col } from "react-bootstrap";
 // components
 import AddTaskForm from "../components/AddTaskForm/AddTaskForm";
 import TasksList from "../components/TasksList/TasksList";
+import SearchTaskForm from "../components/SearchTaskForm/SearchTaskForm";
 
 class Todo extends Component {
-  state = { tasks: [] };
+  state = { tasks: [], searchQuery: "" };
 
   addTask = task => {
     this.setState({ tasks: [...this.state.tasks, task] });
@@ -23,7 +24,7 @@ class Todo extends Component {
     localStorage.setItem("tasks", JSON.stringify(updatedTasks));
   };
 
-  toggleTask = id => {
+  toggleTaskDone = id => {
     const updatedTasks = this.state.tasks.map(task =>
       task.id !== id ? task : { ...task, done: !task.done }
     );
@@ -33,24 +34,41 @@ class Todo extends Component {
     localStorage.setItem("tasks", JSON.stringify(updatedTasks));
   };
 
+  addSearchQuery = searchQuery => this.setState({ searchQuery });
+
+  // return array of tasks on base searching query
+  returnFilteredTaskResult = () => {
+    const { tasks, searchQuery } = this.state;
+
+    return tasks.filter(
+      t => t.title.toLowerCase().indexOf(searchQuery.toLowerCase()) !== -1
+    );
+  };
+
   componentDidMount() {
     // firsty saving to state from localStorage
-    const tasks = JSON.parse(localStorage.getItem("tasks")) || [];
-    if (this.state.tasks.length === 0) {
-      this.setState({ tasks });
-    }
+    this.setState({ tasks: JSON.parse(localStorage.getItem("tasks")) || [] });
   }
 
   render() {
     return (
-      <Container>
+      <Container className="mt-5">
         <Row>
-          <Col md={{ span: 6, offset: 3 }} className="mt-5">
+          <Col md={7}>
             <AddTaskForm handleAddTask={this.addTask} />
+          </Col>
+
+          <Col md={4}>
+            <SearchTaskForm getSearchQuery={this.addSearchQuery} />
+          </Col>
+        </Row>
+
+        <Row>
+          <Col md={{ span: 7 }}>
             <TasksList
-              tasks={this.state.tasks}
+              tasks={this.returnFilteredTaskResult()}
               handleRemoveTask={this.removeTask}
-              handleToggleTask={this.toggleTask}
+              handleToggleTaskDone={this.toggleTaskDone}
             />
           </Col>
         </Row>

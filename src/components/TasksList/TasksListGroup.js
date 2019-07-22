@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import classnames from "classnames";
 
-const TasksListGroup = ({ tasks, handleRemoveTask, handleToggleTask }) => {
+const TasksListGroup = ({ tasks, handleRemoveTask, handleToggleTaskDone }) => {
   return (
     <ListGroup className="mt-4">
       {tasks.map(task => (
@@ -16,12 +16,12 @@ const TasksListGroup = ({ tasks, handleRemoveTask, handleToggleTask }) => {
           <Form.Check
             type="checkbox"
             id="taskCheckbox"
-            onChange={() => handleToggleTask(task.id)}
+            onChange={() => handleToggleTaskDone(task.id)}
             checked={task.done}
           />
 
           <span
-            onClick={() => handleToggleTask(task.id)}
+            onClick={() => handleToggleTaskDone(task.id)}
             style={{ flexGrow: 1 }}
             className={classnames("text-uppercase", { "task-done": task.done })}
           >
@@ -44,7 +44,7 @@ const TasksListGroup = ({ tasks, handleRemoveTask, handleToggleTask }) => {
 TasksListGroup.propTypes = {
   tasks: PropTypes.array.isRequired,
   handleRemoveTask: PropTypes.func.isRequired,
-  handleToggleTask: PropTypes.func.isRequired
+  handleToggleTaskDone: PropTypes.func.isRequired
 };
 
 export default TasksListGroup;
