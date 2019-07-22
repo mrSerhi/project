@@ -4,8 +4,9 @@ import { Container, Row, Col } from "react-bootstrap";
 // components
 import AddTaskForm from "../components/AddTaskForm/AddTaskForm";
 import TasksList from "../components/TasksList/TasksList";
-import SearchTaskForm from "../components/SearchTaskForm/SearchTaskForm";
+// import SearchTaskForm from "../components/SearchTaskForm/SearchTaskForm";
 import SortTasksBlock from "../components/SortTasksBlock";
+import TasksNavbar from "../components/TasksNavbar/Navbar";
 
 class Todo extends Component {
   state = { tasks: [], searchQuery: "", filter: "all" };
@@ -35,7 +36,7 @@ class Todo extends Component {
     localStorage.setItem("tasks", JSON.stringify(updatedTasks));
   };
 
-  addSearchQuery = searchQuery => this.setState({ searchQuery });
+  setSearchQuery = searchQuery => this.setState({ searchQuery });
 
   getTaskFilter = filter => this.setState({ filter });
 
@@ -61,6 +62,22 @@ class Todo extends Component {
     return this.filterTasksByQuery(result, searchQuery);
   };
 
+  clearComplatedTasks = e => {
+    e.preventDefault();
+    if (!window.confirm("Are you sure?")) return;
+    this.setState({ tasks: this.state.tasks.filter(t => !t.done) });
+  };
+
+  setAllTasksAsCompleted = () => {
+    const shalow = [...this.state.tasks];
+    shalow.forEach(t => ({ ...t, done: true }));
+    // this.setState({
+    //   tasks: this.state.tasks.map(task => ({ ...task }))
+    // });
+    // return this.state.tasks.map(task => ({ ...task, done: true }));
+    return shalow;
+  };
+
   componentDidMount() {
     // firsty saving to state from localStorage
     this.setState({ tasks: JSON.parse(localStorage.getItem("tasks")) || [] });
@@ -72,34 +89,40 @@ class Todo extends Component {
       (sub, curr) => (sub += !curr.done),
       0
     );
+    const completedTasksLength = this.state.tasks.reduce(
+      (sub, curr) => (sub += curr.done),
+      1
+    );
 
+    console.log(this.setAllTasksAsCompleted());
     return (
-      <Container className="mt-5">
-        {/* <Row> */}
-
-        {/* <Col md={4}>
-            <SearchTaskForm getSearchQuery={this.addSearchQuery} />
-          </Col> */}
-        {/* </Row> */}
-
-        <Row>
-          <Col md={6} className="m-auto">
-            <AddTaskForm handleAddTask={this.addTask} />
-            <TasksList
-              tasks={this.returnFilteredTaskResult()}
-              handleRemoveTask={this.removeTask}
-              handleToggleTaskDone={this.toggleTaskDone}
-            />
-            {tasks.length > 0 && (
-              <SortTasksBlock
-                activeTasksLength={activeTasksLength}
-                handleGetTaskFilter={this.getTaskFilter}
-                selectedFilter={this.state.filter}
+      <>
+        <TasksNavbar setSearchQuery={this.setSearchQuery} />
+        <Container className="mt-5">
+          <Row>
+            <Col md={6} className="m-auto">
+              <AddTaskForm
+                setAllTasksAsCompleted={this.setAllTasksAsCompleted}
+                handleAddTask={this.addTask}
               />
-            )}
-          </Col>
-        </Row>
-      </Container>
+              <TasksList
+                tasks={this.returnFilteredTaskResult()}
+                handleRemoveTask={this.removeTask}
+                handleToggleTaskDone={this.toggleTaskDone}
+              />
+              {tasks.length > 0 && (
+                <SortTasksBlock
+                  activeTasksLength={activeTasksLength}
+                  completedTasksLength={completedTasksLength}
+                  handleGetTaskFilter={this.getTaskFilter}
+                  handleClearComplatedTasks={this.clearComplatedTasks}
+                  selectedFilter={this.state.filter}
+                />
+              )}
+            </Col>
+          </Row>
+        </Container>
+      </>
     );
   }
 }

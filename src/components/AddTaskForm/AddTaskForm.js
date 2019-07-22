@@ -2,10 +2,13 @@ import React, { Component } from "react";
 import uuid from "uuid";
 import PropTypes from "prop-types";
 import { Form, InputGroup, FormControl, Button } from "react-bootstrap";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCheckCircle } from "@fortawesome/free-solid-svg-icons";
 
 class AddTaskForm extends Component {
   static propTypes = {
-    handleAddTask: PropTypes.func.isRequired
+    handleAddTask: PropTypes.func.isRequired,
+    setAllTasksAsCompleted: PropTypes.func.isRequired
   };
 
   constructor(props) {
@@ -34,7 +37,15 @@ class AddTaskForm extends Component {
   render() {
     return (
       <Form onSubmit={this.addTaskOnSubmit}>
-        <InputGroup size="lg" className="mb-3">
+        <InputGroup size="lg" className="mb-2">
+          <InputGroup.Prepend>
+            <Button
+              onClick={this.props.setAllTasksAsCompleted}
+              variant="outline-info"
+            >
+              <FontAwesomeIcon icon={faCheckCircle} />
+            </Button>
+          </InputGroup.Prepend>
           <FormControl
             placeholder="What needs to be done?"
             aria-label="Add user task"
@@ -44,7 +55,7 @@ class AddTaskForm extends Component {
             ref={this.input}
           />
           <InputGroup.Append>
-            <Button variant="primary" type="submit">
+            <Button variant="dark" type="submit">
               Ok
             </Button>
           </InputGroup.Append>
