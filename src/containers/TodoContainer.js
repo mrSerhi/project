@@ -5,9 +5,10 @@ import { Container, Row, Col } from "react-bootstrap";
 import AddTaskForm from "../components/AddTaskForm/AddTaskForm";
 import TasksList from "../components/TasksList/TasksList";
 import SearchTaskForm from "../components/SearchTaskForm/SearchTaskForm";
+import SortTasksButtonGroup from "../components/SortTasks/SortTasksButtonGroup";
 
 class Todo extends Component {
-  state = { tasks: [], searchQuery: "" };
+  state = { tasks: [], searchQuery: "", filter: "all" };
 
   addTask = task => {
     this.setState({ tasks: [...this.state.tasks, task] });
@@ -36,9 +37,14 @@ class Todo extends Component {
 
   addSearchQuery = searchQuery => this.setState({ searchQuery });
 
+  getTaskFilter = filter => this.setState({ filter });
+
   // return array of tasks on base searching query
   returnFilteredTaskResult = () => {
-    const { tasks, searchQuery } = this.state;
+    const { tasks, searchQuery, filter } = this.state;
+
+    if (filter === "done") return tasks.filter(t => t.done);
+    if (filter === "active") return tasks.filter(t => !t.done);
 
     return tasks.filter(
       t => t.title.toLowerCase().indexOf(searchQuery.toLowerCase()) !== -1
@@ -64,12 +70,16 @@ class Todo extends Component {
         </Row>
 
         <Row>
-          <Col md={{ span: 7 }}>
+          <Col sx={{ span: 7 }}>
             <TasksList
               tasks={this.returnFilteredTaskResult()}
               handleRemoveTask={this.removeTask}
               handleToggleTaskDone={this.toggleTaskDone}
             />
+          </Col>
+
+          <Col>
+            <SortTasksButtonGroup handleGetTaskFilter={this.getTaskFilter} />
           </Col>
         </Row>
       </Container>
