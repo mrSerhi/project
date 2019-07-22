@@ -39,16 +39,26 @@ class Todo extends Component {
 
   getTaskFilter = filter => this.setState({ filter });
 
+  filterTasksByQuery = (tasks, query) => {
+    return tasks.filter(
+      t => t.title.toLowerCase().indexOf(query.toLowerCase()) !== -1
+    );
+  };
+
   // return array of tasks on base searching query
   returnFilteredTaskResult = () => {
     const { tasks, searchQuery, filter } = this.state;
+    let result;
 
-    if (filter === "done") return tasks.filter(t => t.done);
-    if (filter === "active") return tasks.filter(t => !t.done);
+    if (filter === "done") {
+      result = tasks.filter(t => t.done);
+    } else if (filter === "active") {
+      result = tasks.filter(t => !t.done);
+    } else {
+      result = tasks;
+    }
 
-    return tasks.filter(
-      t => t.title.toLowerCase().indexOf(searchQuery.toLowerCase()) !== -1
-    );
+    return this.filterTasksByQuery(result, searchQuery);
   };
 
   componentDidMount() {
