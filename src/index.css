@@ -1,4 +1,5 @@
 body {
+  position: relative;
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
     "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
@@ -13,6 +14,12 @@ input:focus {
   box-shadow: none !important;
   border-color: lightblue !important;
   color: #216583 !important;
+}
+
+button:focus,
+button:active {
+  outline: 0 !important;
+  box-shadow: none !important;
 }
 
 code {

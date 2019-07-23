@@ -4,7 +4,7 @@ import { Container, Row, Col } from "react-bootstrap";
 // components
 import AddTaskForm from "../todos/AddTaskForm";
 import TasksList from "../todos/TasksList/TasksList";
-import SortTasksBlock from "../todos/SortTasksBlock/SortTasks";
+import SortTasksBlock from "../todos/SortTasksBlock";
 import TasksNavbar from "../Navbar";
 
 class Todo extends Component {
@@ -14,50 +14,50 @@ class Todo extends Component {
     filter: "all"
   };
 
-  addTask = task => {
+  addTask = (task) => {
     this.setState({ tasks: [...this.state.tasks, task] });
   };
 
-  removeTask = id => {
-    this.setState({ tasks: this.state.tasks.filter(task => task.id !== id) });
+  removeTask = (id) => {
+    this.setState({ tasks: this.state.tasks.filter((task) => task.id !== id) });
   };
 
-  removeAllCompletedTasks = e => {
+  removeAllCompletedTasks = (e) => {
     e.preventDefault();
     if (!window.confirm("Are you sure?")) return;
 
-    this.setState({ tasks: this.state.tasks.filter(task => !task.done) });
+    this.setState({ tasks: this.state.tasks.filter((task) => !task.done) });
   };
 
-  toggleTaskDone = id => {
+  toggleTaskDone = (id) => {
     this.setState({
-      tasks: this.state.tasks.map(task =>
+      tasks: this.state.tasks.map((task) =>
         task.id !== id ? task : { ...task, done: !task.done }
       )
     });
   };
 
-  setSearchQuery = searchQuery => this.setState({ searchQuery });
+  setSearchQuery = (searchQuery) => this.setState({ searchQuery });
 
-  setTaskFilter = filter => this.setState({ filter });
+  setTaskFilter = (filter) => this.setState({ filter });
 
   getFilteredTasks = (tasks, filter, searchQuery) => {
     const preparedQuery = searchQuery.trim().toLowerCase();
 
     if (filter === "done") {
       return tasks.filter(
-        task => task.done && task.title.toLowerCase().includes(preparedQuery)
+        (task) => task.done && task.title.toLowerCase().includes(preparedQuery)
       );
     }
 
     if (filter === "active") {
       return tasks.filter(
-        task => !task.done && task.title.toLowerCase().includes(preparedQuery)
+        (task) => !task.done && task.title.toLowerCase().includes(preparedQuery)
       );
     }
 
     return tasks.filter(
-      task => task && task.title.toLowerCase().includes(preparedQuery)
+      (task) => task && task.title.toLowerCase().includes(preparedQuery)
     );
   };
 
@@ -76,10 +76,21 @@ class Todo extends Component {
     const { tasks, filter, searchQuery } = this.state;
     return (
       <>
-        <TasksNavbar setSearchQuery={this.setSearchQuery} />
-        <Container className="mt-5">
+        <TasksNavbar />
+        <Container className="mt-3">
           <Row>
-            <Col md={6} className="m-auto">
+            <Col md={{ span: 8, offset: 2 }} className="mb-2">
+              <SortTasksBlock
+                tasks={tasks}
+                onSetTaskFilter={this.setTaskFilter}
+                setSearchQuery={this.setSearchQuery}
+                onRemoveCompletedTasks={this.removeAllCompletedTasks}
+              />
+            </Col>
+          </Row>
+
+          <Row>
+            <Col md={{ span: 6, offset: 3 }}>
               <AddTaskForm tasks={tasks} handleAddTask={this.addTask} />
 
               <TasksList
@@ -87,15 +98,6 @@ class Todo extends Component {
                 onRemoveTask={this.removeTask}
                 onToggleTaskDone={this.toggleTaskDone}
               />
-
-              {this.state.tasks && (
-                <SortTasksBlock
-                  tasks={tasks}
-                  handleGetTaskFilter={this.setTaskFilter}
-                  handleRemovingCompletedTasks={this.removeAllCompletedTasks}
-                  selectedFilter={this.state.filter}
-                />
-              )}
             </Col>
           </Row>
         </Container>

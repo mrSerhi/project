@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Col, InputGroup, FormControl, Button } from "react-bootstrap";
+import { Col, InputGroup, FormControl } from "react-bootstrap";
 import PropTypes from "prop-types";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
@@ -9,15 +9,14 @@ class SearchTaskForm extends Component {
     setSearchQuery: PropTypes.func.isRequired
   };
 
-  getQueryOnChange = e => {
+  getQueryOnChange = (e) => {
     this.props.setSearchQuery(e.target.value);
   };
 
-  getSearchQueryOnChange = () => {};
   render() {
     return (
-      <Col sm={4}>
-        <InputGroup>
+      <Col sm={6}>
+        <InputGroup size="sm">
           <InputGroup.Prepend>
             <InputGroup.Text>
               <FontAwesomeIcon icon={faSearch} />
@@ -26,7 +25,7 @@ class SearchTaskForm extends Component {
 
           <FormControl
             type="search"
-            placeholder="Enter Searching... task"
+            placeholder="Enter Searching task ..."
             onChange={this.setQueryOnChange}
           />
         </InputGroup>

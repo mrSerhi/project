@@ -1,6 +1,13 @@
 .task-item {
   font-size: 1.3rem;
   cursor: pointer;
+  flex-grow: 1;
+}
+
+.task-group-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .task-done {
@@ -13,15 +20,13 @@
 
 .task-remove__button {
   color: rgb(170, 25, 25);
-  font-size: 1rem;
-  transform: translateX(0);
-  background: rgba(230, 230, 230, 0.7);
-  border: 1px solid black;
-  border-radius: 10% / 50%;
+  background: rgba(230, 230, 230, 0.4);
   transition: all 0.4s ease-in;
 }
 
 .task-remove__button:hover,
 .task-remove__button:active {
   color: rgba(170, 25, 25, 0.7);
+  transform: translateY(-0.2rem);
+  box-shadow: 3px 13px 18px -10px rgba(0, 0, 0, 0.75);
 }

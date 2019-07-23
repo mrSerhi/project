@@ -2,9 +2,6 @@ import React, { Component } from "react";
 import uuid from "uuid";
 import PropTypes from "prop-types";
 import { Form, InputGroup, FormControl, Button } from "react-bootstrap";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCheckCircle } from "@fortawesome/free-solid-svg-icons";
-import classnames from "classnames";
 
 class AddTaskForm extends Component {
   static propTypes = {
@@ -13,8 +10,11 @@ class AddTaskForm extends Component {
 
   state = { title: "" };
 
-  addTaskOnSubmit = e => {
+  addTaskOnSubmit = (e) => {
     e.preventDefault();
+
+    if (this.state.title.trim() === "") return;
+
     const newTask = {
       id: uuid(),
       title: this.state.title,
@@ -26,11 +26,7 @@ class AddTaskForm extends Component {
     this.setState({ title: "" });
   };
 
-  handleTitleChanges = e => this.setState({ title: e.target.value });
-  checkOnCompletedTasks = () => {
-    const { tasks } = this.props;
-    return tasks.filter(task => task.done).length === tasks.length;
-  };
+  handleTitleChanges = (e) => this.setState({ title: e.target.value });
 
   render() {
     return (

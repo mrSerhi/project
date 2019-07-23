@@ -1,6 +1,6 @@
 import React from "react";
 import { Navbar, Container } from "react-bootstrap";
-import SearchTaskForm from "./todos/SearchTaskForm";
+// import SearchTaskForm from "./todos/SearchTaskForm";
 
 const TasksNavbar = ({ setSearchQuery }) => {
   return (
@@ -8,7 +8,7 @@ const TasksNavbar = ({ setSearchQuery }) => {
       <Container>
         <Navbar.Brand>Todos</Navbar.Brand>
 
-        <SearchTaskForm setSearchQuery={setSearchQuery} />
+        {/* <SearchTaskForm setSearchQuery={setSearchQuery} /> */}
       </Container>
     </Navbar>
   );
