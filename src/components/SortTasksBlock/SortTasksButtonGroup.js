@@ -25,7 +25,8 @@ const SortTasksButtonGroup = ({ handleGetTaskFilter, selectedFilter }) => {
 };
 
 SortTasksButtonGroup.propTypes = {
-  handleGetTaskFilter: PropTypes.func.isRequired
+  handleGetTaskFilter: PropTypes.func.isRequired,
+  selectedFilter: PropTypes.string.isRequired
 };
 
 export default SortTasksButtonGroup;

@@ -4,26 +4,37 @@ import { Container, Row, Col } from "react-bootstrap";
 // components
 import AddTaskForm from "../components/AddTaskForm/AddTaskForm";
 import TasksList from "../components/TasksList/TasksList";
-// import SearchTaskForm from "../components/SearchTaskForm/SearchTaskForm";
-import SortTasksBlock from "../components/SortTasksBlock";
+import SortTasksBlock from "../components/SortTasksBlock/SortTasks";
 import TasksNavbar from "../components/TasksNavbar/Navbar";
 
 class Todo extends Component {
-  state = { tasks: [], searchQuery: "", filter: "all" };
+  state = {
+    tasks: [],
+    searchQuery: "",
+    filter: "all"
+  };
 
   addTask = task => {
-    this.setState({ tasks: [...this.state.tasks, task] });
+    const updatedTasks = [...this.state.tasks, task];
+    this.setState({ tasks: updatedTasks });
 
-    // save to localstorage
-    localStorage.setItem("tasks", JSON.stringify([...this.state.tasks, task]));
+    this.setDataToLocalStorage("tasks", updatedTasks);
   };
 
   removeTask = id => {
     const updatedTasks = this.state.tasks.filter(t => t.id !== id);
     this.setState({ tasks: updatedTasks });
 
-    // remove from localstorage
-    localStorage.setItem("tasks", JSON.stringify(updatedTasks));
+    this.setDataToLocalStorage("tasks", updatedTasks);
+  };
+
+  removeAllCompletedTasks = e => {
+    e.preventDefault();
+    const updatedTasks = this.state.tasks.filter(t => !t.done);
+    if (!window.confirm("Are you sure?")) return;
+    this.setState({ tasks: updatedTasks });
+
+    this.setDataToLocalStorage("tasks", updatedTasks);
   };
 
   toggleTaskDone = id => {
@@ -32,15 +43,14 @@ class Todo extends Component {
     );
     this.setState({ tasks: updatedTasks });
 
-    // update in localstorage
-    localStorage.setItem("tasks", JSON.stringify(updatedTasks));
+    this.setDataToLocalStorage("tasks", updatedTasks);
   };
 
   setSearchQuery = searchQuery => this.setState({ searchQuery });
 
   getTaskFilter = filter => this.setState({ filter });
 
-  filterTasksByQuery = (tasks, query) => {
+  filteringTasksByQuery = (tasks, query) => {
     return tasks.filter(
       t => t.title.toLowerCase().indexOf(query.toLowerCase()) !== -1
     );
@@ -59,42 +69,29 @@ class Todo extends Component {
       result = tasks;
     }
 
-    return this.filterTasksByQuery(result, searchQuery);
-  };
-
-  clearComplatedTasks = e => {
-    e.preventDefault();
-    if (!window.confirm("Are you sure?")) return;
-    this.setState({ tasks: this.state.tasks.filter(t => !t.done) });
+    return this.filteringTasksByQuery(result, searchQuery);
   };
 
   setAllTasksAsCompleted = () => {
-    const shalow = [...this.state.tasks];
-    shalow.forEach(t => ({ ...t, done: true }));
-    // this.setState({
-    //   tasks: this.state.tasks.map(task => ({ ...task }))
-    // });
-    // return this.state.tasks.map(task => ({ ...task, done: true }));
-    return shalow;
+    const updatedTasks = this.state.tasks.map(task =>
+      task.done ? task : { ...task, done: !task.done }
+    );
+    this.setState({ tasks: updatedTasks });
+
+    this.setDataToLocalStorage("tasks", updatedTasks);
   };
+
+  setDataToLocalStorage = (key, data) =>
+    localStorage.setItem(key, JSON.stringify(data));
 
   componentDidMount() {
     // firsty saving to state from localStorage
-    this.setState({ tasks: JSON.parse(localStorage.getItem("tasks")) || [] });
+    this.setState({
+      tasks: JSON.parse(localStorage.getItem("tasks")) || []
+    });
   }
 
   render() {
-    const { tasks } = this.state;
-    const activeTasksLength = this.state.tasks.reduce(
-      (sub, curr) => (sub += !curr.done),
-      0
-    );
-    const completedTasksLength = this.state.tasks.reduce(
-      (sub, curr) => (sub += curr.done),
-      1
-    );
-
-    console.log(this.setAllTasksAsCompleted());
     return (
       <>
         <TasksNavbar setSearchQuery={this.setSearchQuery} />
@@ -102,6 +99,8 @@ class Todo extends Component {
           <Row>
             <Col md={6} className="m-auto">
               <AddTaskForm
+                tasks={this.state.tasks}
+                allTasksCompleted={this.state.allTasksCompleted}
                 setAllTasksAsCompleted={this.setAllTasksAsCompleted}
                 handleAddTask={this.addTask}
               />
@@ -110,12 +109,16 @@ class Todo extends Component {
                 handleRemoveTask={this.removeTask}
                 handleToggleTaskDone={this.toggleTaskDone}
               />
-              {tasks.length > 0 && (
+              {this.state.tasks.length > 0 && (
                 <SortTasksBlock
-                  activeTasksLength={activeTasksLength}
-                  completedTasksLength={completedTasksLength}
+                  activeTasksLength={
+                    this.state.tasks.filter(t => !t.done).length
+                  }
+                  completedTasksLength={
+                    this.state.tasks.filter(t => t.done).length
+                  }
                   handleGetTaskFilter={this.getTaskFilter}
-                  handleClearComplatedTasks={this.clearComplatedTasks}
+                  handleRemovingCompletedTasks={this.removeAllCompletedTasks}
                   selectedFilter={this.state.filter}
                 />
               )}

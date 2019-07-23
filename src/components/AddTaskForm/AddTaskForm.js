@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 import { Form, InputGroup, FormControl, Button } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheckCircle } from "@fortawesome/free-solid-svg-icons";
+import classnames from "classnames";
 
 class AddTaskForm extends Component {
   static propTypes = {
@@ -33,6 +34,10 @@ class AddTaskForm extends Component {
   };
 
   handleTitleChanges = e => this.setState({ title: e.target.value });
+  checkOnCompletedTasks = () => {
+    const { tasks } = this.props;
+    return tasks.filter(t => t.done).length === tasks.length;
+  };
 
   render() {
     return (
@@ -42,10 +47,12 @@ class AddTaskForm extends Component {
             <Button
               onClick={this.props.setAllTasksAsCompleted}
               variant="outline-info"
+              className={classnames({ active: this.checkOnCompletedTasks() })}
             >
               <FontAwesomeIcon icon={faCheckCircle} />
             </Button>
           </InputGroup.Prepend>
+
           <FormControl
             placeholder="What needs to be done?"
             aria-label="Add user task"
@@ -54,6 +61,7 @@ class AddTaskForm extends Component {
             value={this.state.title}
             ref={this.input}
           />
+
           <InputGroup.Append>
             <Button variant="dark" type="submit">
               Ok
