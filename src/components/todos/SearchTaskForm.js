@@ -8,30 +8,26 @@ class SearchTaskForm extends Component {
   static propTypes = {
     setSearchQuery: PropTypes.func.isRequired
   };
-  constructor(props) {
-    super(props);
-    this.searchInput = React.createRef();
-  }
-  getSearchQueryOnChange = () => {
-    this.props.setSearchQuery(this.searchInput.current.value);
+
+  getQueryOnChange = e => {
+    this.props.setSearchQuery(e.target.value);
   };
+
+  getSearchQueryOnChange = () => {};
   render() {
     return (
       <Col sm={4}>
         <InputGroup>
           <InputGroup.Prepend>
-            <Button variant="dark">
+            <InputGroup.Text>
               <FontAwesomeIcon icon={faSearch} />
-            </Button>
+            </InputGroup.Text>
           </InputGroup.Prepend>
 
           <FormControl
             type="search"
-            placeholder="Enter Search task"
-            aria-label="Search users task"
-            aria-describedby="basic-addon2"
-            onChange={this.getSearchQueryOnChange}
-            ref={this.searchInput}
+            placeholder="Enter Searching... task"
+            onChange={this.setQueryOnChange}
           />
         </InputGroup>
       </Col>

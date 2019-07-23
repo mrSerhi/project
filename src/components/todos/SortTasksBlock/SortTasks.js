@@ -6,8 +6,7 @@ import { faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 import SortTasksButtonGroup from "./SortTasksButtonGroup";
 
 const SortTasksBlock = ({
-  activeTasksLength,
-  completedTasksLength,
+  tasks,
   selectedFilter,
   handleGetTaskFilter,
   handleRemovingCompletedTasks
@@ -17,11 +16,7 @@ const SortTasksBlock = ({
       <Card.Body className="text-white">
         <Row>
           <Col className="d-flex justify-content-around align-items-center">
-            <span>
-              {activeTasksLength > 1
-                ? `${activeTasksLength} tasks left`
-                : `${activeTasksLength} task left`}
-            </span>
+            <span>{tasks.filter(task => !task.done).length} tasks left</span>
 
             <SortTasksButtonGroup
               handleGetTaskFilter={handleGetTaskFilter}
@@ -30,16 +25,13 @@ const SortTasksBlock = ({
           </Col>
         </Row>
 
-        {completedTasksLength >= 1 && (
-          <Button
-            onClick={handleRemovingCompletedTasks}
-            variant="link"
-            className="text-warning mx-auto"
-          >
-            Clear completed tasks{" "}
-            <FontAwesomeIcon icon={faTrashAlt} size="sm" />
-          </Button>
-        )}
+        <Button
+          onClick={handleRemovingCompletedTasks}
+          variant="link"
+          className="text-warning mx-auto"
+        >
+          Clear completed tasks <FontAwesomeIcon icon={faTrashAlt} size="sm" />
+        </Button>
       </Card.Body>
     </Card>
   );

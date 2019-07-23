@@ -1,0 +1,27 @@
+.task-item {
+  font-size: 1.3rem;
+  cursor: pointer;
+}
+
+.task-done {
+  position: relative;
+  text-decoration: line-through;
+  color: rgba(192, 192, 192, 0.7);
+  overflow: hidden;
+  transition: all 0.4s ease-in;
+}
+
+.task-remove__button {
+  color: rgb(170, 25, 25);
+  font-size: 1rem;
+  transform: translateX(0);
+  background: rgba(230, 230, 230, 0.7);
+  border: 1px solid black;
+  border-radius: 10% / 50%;
+  transition: all 0.4s ease-in;
+}
+
+.task-remove__button:hover,
+.task-remove__button:active {
+  color: rgba(170, 25, 25, 0.7);
+}

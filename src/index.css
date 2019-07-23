@@ -8,6 +8,13 @@ body {
   background: rgba(248, 248, 248, 0.7);
 }
 
+input:focus {
+  outline: 0 !important;
+  box-shadow: none !important;
+  border-color: lightblue !important;
+  color: #216583 !important;
+}
+
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;

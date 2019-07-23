@@ -5,31 +5,24 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import classnames from "classnames";
 
-const TasksListGroup = ({ tasks, handleRemoveTask, handleToggleTaskDone }) => {
+const TasksListGroup = ({ tasks, onRemoveTask, onToggleTaskDone }) => {
   return (
     <ListGroup>
-      {tasks.map(task => (
+      {tasks.map((task, index) => (
         <ListGroup.Item
           key={task.id}
-          className="d-flex justify-content-between align-items-center task-item"
+          className="d-flex justify-content-between align-items-center"
+          onClick={() => onToggleTaskDone(task.id)}
         >
-          <Form.Check
-            type="checkbox"
-            id="taskCheckbox"
-            onChange={() => handleToggleTaskDone(task.id)}
-            checked={task.done}
-          />
-
-          <span
-            onClick={() => handleToggleTaskDone(task.id)}
+          <div
             style={{ flexGrow: 1 }}
-            className={classnames("", { "task-done": task.done })}
+            className={classnames("task-item", { "task-done": task.done })}
           >
-            {task.title}
-          </span>
+            {index + 1}. {task.title}
+          </div>
 
           <Button
-            onClick={() => handleRemoveTask(task.id)}
+            onClick={() => onRemoveTask(task.id)}
             variant="link"
             size="sm"
             className="task-remove__button"
@@ -44,8 +37,8 @@ const TasksListGroup = ({ tasks, handleRemoveTask, handleToggleTaskDone }) => {
 
 TasksListGroup.propTypes = {
   tasks: PropTypes.array.isRequired,
-  handleRemoveTask: PropTypes.func.isRequired,
-  handleToggleTaskDone: PropTypes.func.isRequired
+  onRemoveTask: PropTypes.func.isRequired,
+  onToggleTaskDone: PropTypes.func.isRequired
 };
 
 export default TasksListGroup;

@@ -8,16 +8,10 @@ import classnames from "classnames";
 
 class AddTaskForm extends Component {
   static propTypes = {
-    handleAddTask: PropTypes.func.isRequired,
-    setAllTasksAsCompleted: PropTypes.func.isRequired
+    handleAddTask: PropTypes.func.isRequired
   };
 
-  constructor(props) {
-    super(props);
-    this.state = { title: "" };
-
-    this.input = React.createRef();
-  }
+  state = { title: "" };
 
   addTaskOnSubmit = e => {
     e.preventDefault();
@@ -30,36 +24,22 @@ class AddTaskForm extends Component {
 
     // clear input field
     this.setState({ title: "" });
-    this.input.current.focus();
   };
 
   handleTitleChanges = e => this.setState({ title: e.target.value });
   checkOnCompletedTasks = () => {
     const { tasks } = this.props;
-    return tasks.filter(t => t.done).length === tasks.length;
+    return tasks.filter(task => task.done).length === tasks.length;
   };
 
   render() {
     return (
       <Form onSubmit={this.addTaskOnSubmit}>
         <InputGroup size="lg" className="mb-2">
-          <InputGroup.Prepend>
-            <Button
-              onClick={this.props.setAllTasksAsCompleted}
-              variant="outline-info"
-              className={classnames({ active: this.checkOnCompletedTasks() })}
-            >
-              <FontAwesomeIcon icon={faCheckCircle} />
-            </Button>
-          </InputGroup.Prepend>
-
           <FormControl
             placeholder="What needs to be done?"
-            aria-label="Add user task"
-            aria-describedby="basic-addon2"
             onChange={this.handleTitleChanges}
             value={this.state.title}
-            ref={this.input}
           />
 
           <InputGroup.Append>
