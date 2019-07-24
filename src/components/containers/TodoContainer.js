@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Container, Row, Col } from "react-bootstrap";
+import { Container, Row, Col, Modal, Button } from "react-bootstrap";
 
 // components
 import AddTaskForm from "../todos/AddTaskForm";
@@ -11,8 +11,17 @@ class Todo extends Component {
   state = {
     tasks: [],
     searchQuery: "",
-    filter: "all"
+    filter: "all",
+    removeAllItems: false,
+    showModal: false
   };
+
+  openModal = (e) => {
+    e.preventDefault();
+    this.setState({ showModal: true });
+  };
+
+  closeModal = () => this.setState({ showModal: false });
 
   addTask = (task) => {
     this.setState({ tasks: [...this.state.tasks, task] });
@@ -22,11 +31,11 @@ class Todo extends Component {
     this.setState({ tasks: this.state.tasks.filter((task) => task.id !== id) });
   };
 
-  removeAllCompletedTasks = (e) => {
-    e.preventDefault();
-    if (!window.confirm("Are you sure?")) return;
-
-    this.setState({ tasks: this.state.tasks.filter((task) => !task.done) });
+  removeAllCompletedTasks = () => {
+    this.setState({
+      tasks: this.state.tasks.filter((task) => !task.done),
+      showModal: false
+    });
   };
 
   toggleTaskDone = (id) => {
@@ -76,7 +85,25 @@ class Todo extends Component {
     const { tasks, filter, searchQuery } = this.state;
     return (
       <>
+        <Modal show={this.state.showModal} onHide={this.closeModal}>
+          <Modal.Header closeButton>
+            <h4>Are you sure?</h4>
+          </Modal.Header>
+          <Modal.Body>
+            <p className="lead">All complated tasks will be deleted!</p>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button onClick={this.removeAllCompletedTasks} variant="danger">
+              Remove
+            </Button>
+            <Button onClick={this.closeModal} variant="info">
+              Cancel
+            </Button>
+          </Modal.Footer>
+        </Modal>
+
         <TasksNavbar />
+
         <Container className="mt-3">
           <Row>
             <Col md={{ span: 8, offset: 2 }} className="mb-2">
@@ -84,7 +111,7 @@ class Todo extends Component {
                 tasks={tasks}
                 onSetTaskFilter={this.setTaskFilter}
                 setSearchQuery={this.setSearchQuery}
-                onRemoveCompletedTasks={this.removeAllCompletedTasks}
+                openModal={this.openModal}
               />
             </Col>
           </Row>

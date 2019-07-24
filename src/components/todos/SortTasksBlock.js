@@ -24,6 +24,7 @@ class SortTasksBlock extends Component {
     return (
       <Card bg="info" style={{ borderRadius: 0 }}>
         <Card.Body className="text-white">
+          <SearchTaskForm setSearchQuery={this.props.setSearchQuery} />
           <Row>
             <Col className="d-flex flex-column align-items-end">
               <span>
@@ -32,7 +33,7 @@ class SortTasksBlock extends Component {
               </span>
 
               <Button
-                onClick={this.props.onRemoveCompletedTasks}
+                onClick={this.props.openModal}
                 variant="link"
                 className="text-warning"
               >
@@ -44,7 +45,7 @@ class SortTasksBlock extends Component {
 
           <Row>
             <Col className="d-flex justify-content-around align-items-center">
-              <SearchTaskForm setSearchQuery={this.props.setSearchQuery} />
+              {/* <SearchTaskForm setSearchQuery={this.props.setSearchQuery} /> */}
 
               <ButtonGroup size="sm">
                 <Button
