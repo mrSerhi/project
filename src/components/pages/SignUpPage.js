@@ -7,6 +7,7 @@ const initialValues = { username: "", email: "" };
 const SignupSchema = Yup.object().shape({
   username: Yup.string()
     .trim()
+    .lowercase()
     .min(2, "name should be longest than 3 characters")
     .max(20, "Name should be shorter than 20 characters")
     .required("Name is required"),
@@ -24,12 +25,15 @@ const SignUpForm = () => {
             <Card.Body>
               <h3 className="display-4 text-center">Sign Up</h3>
               <Formik
+                initialValues={initialValues}
                 validationSchema={SignupSchema}
                 onSubmit={(values, { resetForm }) => {
-                  localStorage.setItem("userlogindata", JSON.stringify(values));
+                  localStorage.setItem(
+                    "userdata",
+                    JSON.stringify([{ ...values }])
+                  );
                   resetForm(initialValues);
                 }}
-                initialValues={initialValues}
               >
                 {({
                   handleSubmit,
@@ -54,7 +58,7 @@ const SignUpForm = () => {
                       <Form.Control.Feedback type="invalid">
                         {errors.username}
                       </Form.Control.Feedback>
-                      <Form.Control.Feedback>Done!</Form.Control.Feedback>
+                      <Form.Control.Feedback>Accepted!</Form.Control.Feedback>
                     </Form.Group>
 
                     <Form.Group controlId="validationUserEmail">
