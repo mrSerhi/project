@@ -5,7 +5,7 @@ import { Container, Row, Col, Modal, Button } from "react-bootstrap";
 import AddTaskForm from "../todos/AddTaskForm";
 import TasksList from "../todos/TasksList/TasksList";
 import SortTasksBlock from "../todos/SortTasksBlock";
-import TasksNavbar from "../Navbar";
+import TodoNavbar from "../todos/TodoNavbar";
 
 class Todo extends Component {
   state = {
@@ -102,7 +102,7 @@ class Todo extends Component {
           </Modal.Footer>
         </Modal>
 
-        <TasksNavbar />
+        {/* <TodoNavbar /> */}
 
         <Container className="mt-3">
           <Row>
