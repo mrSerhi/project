@@ -8,7 +8,7 @@ import classnames from "classnames";
 const TasksListGroup = ({ tasks, onRemoveTask, onToggleTaskDone }) => {
   return (
     <ListGroup>
-      {tasks.map((task, index) => (
+      {tasks.map((task) => (
         <ListGroup.Item key={task.id} className="task-group-item">
           <div
             onClick={() => onToggleTaskDone(task.id)}

@@ -1,18 +1,6 @@
 import React from "react";
 import { Container, Row, Col, Form, Button, Card } from "react-bootstrap";
 import { Formik } from "formik";
-import * as Yup from "yup";
-
-const SignInSchema = Yup.object().shape({
-  username: Yup.string()
-    .trim()
-    .min(2, "name should be longest than 3 characters")
-    .max(20, "Name should be shorter than 20 characters")
-    .required("Name is required"),
-  email: Yup.string()
-    .email("Type a valid email address")
-    .required("Email is required")
-});
 
 const initialValues = { username: "", email: "" };
 
@@ -27,7 +15,6 @@ const SignInForm = () => {
 
               <Formik
                 initialValues={initialValues}
-                validationSchema={SignInSchema}
                 validate={(values) => {
                   const userData = JSON.parse(localStorage.getItem("userdata"));
                   const errors = {};
@@ -53,32 +40,11 @@ const SignInForm = () => {
                   return errors;
                 }}
                 onSubmit={(values, actions) => {
-                  // const userData = JSON.parse(localStorage.getItem("userdata"));
-
-                  // userData.forEach((data) => {
-                  //   if (data.username !== values.username) {
-                  //     actions.setSubmitting(false);
-                  //     actions.setFieldError("username", "User is not found");
-                  //   }
-
-                  //   if (data.email !== values.email) {
-                  //     actions.setSubmitting(false);
-                  //     actions.setFieldError("email", "Email is not found");
-                  //   }
-                  // });
-
                   alert("Logged successfuly");
-                  actions.resetForm();
+                  actions.resetForm(initialValues);
                 }}
               >
-                {({
-                  handleSubmit,
-                  handleChange,
-                  values,
-                  touched,
-                  errors,
-                  isSubmitting
-                }) => (
+                {({ handleSubmit, handleChange, values, touched, errors }) => (
                   <Form noValidate onSubmit={handleSubmit}>
                     <Form.Group controlId="validationUserName">
                       <Form.Label>Name</Form.Label>
@@ -114,11 +80,7 @@ const SignInForm = () => {
                       <Form.Control.Feedback>Accepted!</Form.Control.Feedback>
                     </Form.Group>
 
-                    <Button
-                      type="submit"
-                      variant="info"
-                      // disabled={isSubmitting}
-                    >
+                    <Button type="submit" variant="info">
                       Sign In
                     </Button>
                   </Form>

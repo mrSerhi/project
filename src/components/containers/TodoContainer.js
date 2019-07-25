@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Container, Row, Col, Modal, Button } from "react-bootstrap";
 import "rc-pagination/assets/index.css";
+import localeInfo from "rc-pagination/lib/locale/en_US";
 
 // components
 import AddTaskForm from "../todos/AddTaskForm";
@@ -139,15 +140,12 @@ class Todo extends Component {
               <Pagination
                 className="ant-pagination align-self-center mt-2"
                 current={this.state.currentPage}
-                total={filteredTasks.length}
+                total={tasks.length}
                 onChange={this.changeCurrentPage}
                 pageSize={this.state.tasksPerPage}
+                locale={localeInfo}
               />
             </Col>
-          </Row>
-
-          <Row>
-            <Col md={1} className="mx-auto" />
           </Row>
         </Container>
       </>

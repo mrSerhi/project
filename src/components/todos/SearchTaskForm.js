@@ -17,7 +17,7 @@ class SearchTaskForm extends Component {
         <InputGroup size="sm">
           <FormControl
             type="search"
-            placeholder="Enter Searching task ..."
+            placeholder="Enter Searching task title..."
             onChange={this.getQueryOnChange}
           />
         </InputGroup>

@@ -3,18 +3,18 @@ import { Container, Row, Col, Form, Button, Card } from "react-bootstrap";
 import { Formik } from "formik";
 import * as Yup from "yup";
 
-const initialValues = { username: "", email: "" };
 const SignupSchema = Yup.object().shape({
   username: Yup.string()
     .trim()
     .lowercase()
     .min(2, "name should be longest than 3 characters")
     .max(20, "Name should be shorter than 20 characters")
-    .required("Name is required"),
+    .required("Name field is required"),
   email: Yup.string()
     .email("Type a valid email address")
-    .required("Email is required")
+    .required("Email field is required")
 });
+const initialValues = { username: "", email: "" };
 
 const SignUpForm = () => {
   return (
