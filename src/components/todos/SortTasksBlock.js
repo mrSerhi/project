@@ -1,10 +1,12 @@
-// import React from "react";
 import React, { Component } from "react";
 import { Card, Button, Row, Col, ButtonGroup } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 import PropTypes from "prop-types";
 import classnames from "classnames";
+import { connect } from "react-redux";
+// import { bindActionCreators } from "redux";
+import { removeCompletedTasks } from "../../actions/tasks";
 
 import SearchTaskForm from "./SearchTaskForm";
 
@@ -33,7 +35,7 @@ class SortTasksBlock extends Component {
               </span>
 
               <Button
-                onClick={this.props.openModal}
+                onClick={this.props.removeCompletedTasks}
                 variant="link"
                 className="text-warning"
               >
@@ -45,8 +47,6 @@ class SortTasksBlock extends Component {
 
           <Row>
             <Col className="d-flex justify-content-around align-items-center">
-              {/* <SearchTaskForm setSearchQuery={this.props.setSearchQuery} /> */}
-
               <ButtonGroup size="sm">
                 <Button
                   onClick={() => this.setFilter("all")}
@@ -84,4 +84,7 @@ class SortTasksBlock extends Component {
   }
 }
 
-export default SortTasksBlock;
+export default connect(
+  null,
+  { removeCompletedTasks }
+)(SortTasksBlock);

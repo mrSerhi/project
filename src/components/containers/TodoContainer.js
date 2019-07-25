@@ -3,13 +3,8 @@ import { Container, Row, Col } from "react-bootstrap";
 import "rc-pagination/assets/index.css";
 import localeInfo from "rc-pagination/lib/locale/en_US";
 import { connect } from "react-redux";
-import {
-  addTaskAction,
-  getTasksFromStorage,
-  removeTaskAction,
-  updateTaskAction,
-  REMOVE_ALL_COMPLETED_TASKS
-} from "../../actions/tasks";
+import * as taskActions from "../../actions/tasks";
+import { bindActionCreators } from "redux";
 
 // components
 import AddTaskForm from "../todos/AddTaskForm";
@@ -26,20 +21,6 @@ class Todo extends Component {
     tasksPerPage: 5,
     currentPage: 1
   };
-
-  addTask = (task) => this.props.dispatch(addTaskAction(task));
-
-  removeTask = (id) => this.props.dispatch(removeTaskAction(id));
-
-  removeAllCompletedTasks = () => {
-    // this.setState({
-    //   tasks: this.state.tasks.filter((task) => !task.done),
-    //   showModal: false
-    // });
-    this.props.dispatch({ type: REMOVE_ALL_COMPLETED_TASKS });
-  };
-
-  toggleTaskDone = (id) => this.props.dispatch(updateTaskAction(id));
 
   setSearchQuery = (searchQuery) => this.setState({ searchQuery });
 
@@ -75,14 +56,8 @@ class Todo extends Component {
   changeCurrentPage = (page) => this.setState({ currentPage: page });
 
   componentDidMount() {
-    // firsty saving to state from localStorage
-    // this.setState({
-    //   tasks: JSON.parse(localStorage.getItem("tasks")) || []
-    // });
-    // const localStorageTasks = JSON.parse(localStorage.getItem("tasks"));
-    // this.props.addTaskAction(...localStorageTasks);
     const tasks = JSON.parse(localStorage.getItem("tasks")) || [];
-    this.props.dispatch(getTasksFromStorage(tasks));
+    this.props.getTasksFromStorage(tasks);
   }
 
   componentDidUpdate(prevProps) {
@@ -91,52 +66,45 @@ class Todo extends Component {
   }
 
   render() {
-    const { tasks, filter, searchQuery } = this.state;
-    const filteredTasks = this.getFilteredTasks(
-      this.props.tasks,
-      filter,
-      searchQuery
-    );
     return (
-      <>
-        <Container className="mt-3">
-          <Row>
-            <Col md={{ span: 8, offset: 2 }} className="mb-2">
-              <SortTasksBlock
-                tasks={this.props.tasks}
-                onSetTaskFilter={this.setTaskFilter}
-                setSearchQuery={this.setSearchQuery}
-                openModal={this.openModal}
-              />
-            </Col>
-          </Row>
+      <Container className="mt-3">
+        <Row>
+          <Col md={{ span: 8, offset: 2 }} className="mb-2">
+            <SortTasksBlock
+              tasks={this.props.tasks}
+              onSetTaskFilter={this.setTaskFilter}
+              setSearchQuery={this.setSearchQuery}
+            />
+          </Col>
+        </Row>
 
-          <Row>
-            <Col md={{ span: 6, offset: 3 }} className="d-flex flex-column">
-              <AddTaskForm tasks={tasks} handleAddTask={this.addTask} />
+        <Row>
+          <Col md={{ span: 6, offset: 3 }} className="d-flex flex-column">
+            <AddTaskForm />
 
-              <TasksList
-                tasks={this.paginateTasks(filteredTasks)}
-                onRemoveTask={this.removeTask}
-                onToggleTaskDone={this.toggleTaskDone}
-              />
+            <TasksList />
 
-              <Pagination
-                className="ant-pagination align-self-center mt-2"
-                current={this.state.currentPage}
-                total={tasks.length}
-                onChange={this.changeCurrentPage}
-                pageSize={this.state.tasksPerPage}
-                locale={localeInfo}
-              />
-            </Col>
-          </Row>
-        </Container>
-      </>
+            <Pagination
+              className="ant-pagination align-self-center mt-2"
+              current={this.state.currentPage}
+              // total={tasks.length}
+              onChange={this.changeCurrentPage}
+              pageSize={this.state.tasksPerPage}
+              locale={localeInfo}
+            />
+          </Col>
+        </Row>
+      </Container>
     );
   }
 }
 
 const mapStateToProps = (state) => ({ tasks: state.tasks });
+const mapDispatchToProps = (dispatch) => {
+  return bindActionCreators(taskActions, dispatch);
+};
 
-export default connect(mapStateToProps)(Todo);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Todo);
