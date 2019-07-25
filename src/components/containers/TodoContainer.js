@@ -1,7 +1,15 @@
 import React, { Component } from "react";
-import { Container, Row, Col, Modal, Button } from "react-bootstrap";
+import { Container, Row, Col } from "react-bootstrap";
 import "rc-pagination/assets/index.css";
 import localeInfo from "rc-pagination/lib/locale/en_US";
+import { connect } from "react-redux";
+import {
+  addTaskAction,
+  getTasksFromStorage,
+  removeTaskAction,
+  updateTaskAction,
+  REMOVE_ALL_COMPLETED_TASKS
+} from "../../actions/tasks";
 
 // components
 import AddTaskForm from "../todos/AddTaskForm";
@@ -19,35 +27,19 @@ class Todo extends Component {
     currentPage: 1
   };
 
-  openModal = (e) => {
-    e.preventDefault();
-    this.setState({ showModal: true });
-  };
+  addTask = (task) => this.props.dispatch(addTaskAction(task));
 
-  closeModal = () => this.setState({ showModal: false });
-
-  addTask = (task) => {
-    this.setState({ tasks: [...this.state.tasks, task] });
-  };
-
-  removeTask = (id) => {
-    this.setState({ tasks: this.state.tasks.filter((task) => task.id !== id) });
-  };
+  removeTask = (id) => this.props.dispatch(removeTaskAction(id));
 
   removeAllCompletedTasks = () => {
-    this.setState({
-      tasks: this.state.tasks.filter((task) => !task.done),
-      showModal: false
-    });
+    // this.setState({
+    //   tasks: this.state.tasks.filter((task) => !task.done),
+    //   showModal: false
+    // });
+    this.props.dispatch({ type: REMOVE_ALL_COMPLETED_TASKS });
   };
 
-  toggleTaskDone = (id) => {
-    this.setState({
-      tasks: this.state.tasks.map((task) =>
-        task.id !== id ? task : { ...task, done: !task.done }
-      )
-    });
-  };
+  toggleTaskDone = (id) => this.props.dispatch(updateTaskAction(id));
 
   setSearchQuery = (searchQuery) => this.setState({ searchQuery });
 
@@ -84,42 +76,34 @@ class Todo extends Component {
 
   componentDidMount() {
     // firsty saving to state from localStorage
-    this.setState({
-      tasks: JSON.parse(localStorage.getItem("tasks")) || []
-    });
+    // this.setState({
+    //   tasks: JSON.parse(localStorage.getItem("tasks")) || []
+    // });
+    // const localStorageTasks = JSON.parse(localStorage.getItem("tasks"));
+    // this.props.addTaskAction(...localStorageTasks);
+    const tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+    this.props.dispatch(getTasksFromStorage(tasks));
   }
 
-  componentDidUpdate() {
-    localStorage.setItem("tasks", JSON.stringify(this.state.tasks));
+  componentDidUpdate(prevProps) {
+    if (prevProps.tasks !== this.props.tasks)
+      localStorage.setItem("tasks", JSON.stringify(this.props.tasks));
   }
 
   render() {
     const { tasks, filter, searchQuery } = this.state;
-    const filteredTasks = this.getFilteredTasks(tasks, filter, searchQuery);
+    const filteredTasks = this.getFilteredTasks(
+      this.props.tasks,
+      filter,
+      searchQuery
+    );
     return (
       <>
-        <Modal show={this.state.showModal} onHide={this.closeModal}>
-          <Modal.Header closeButton>
-            <h4>Are you sure?</h4>
-          </Modal.Header>
-          <Modal.Body>
-            <p className="lead">All complated tasks will be deleted!</p>
-          </Modal.Body>
-          <Modal.Footer>
-            <Button onClick={this.removeAllCompletedTasks} variant="danger">
-              Remove
-            </Button>
-            <Button onClick={this.closeModal} variant="info">
-              Cancel
-            </Button>
-          </Modal.Footer>
-        </Modal>
-
         <Container className="mt-3">
           <Row>
             <Col md={{ span: 8, offset: 2 }} className="mb-2">
               <SortTasksBlock
-                tasks={tasks}
+                tasks={this.props.tasks}
                 onSetTaskFilter={this.setTaskFilter}
                 setSearchQuery={this.setSearchQuery}
                 openModal={this.openModal}
@@ -153,4 +137,6 @@ class Todo extends Component {
   }
 }
 
-export default Todo;
+const mapStateToProps = (state) => ({ tasks: state.tasks });
+
+export default connect(mapStateToProps)(Todo);
