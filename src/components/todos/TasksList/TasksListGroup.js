@@ -14,7 +14,7 @@ const TasksListGroup = ({ tasks, onRemoveTask, onToggleTaskDone }) => {
             onClick={() => onToggleTaskDone(task.id)}
             className={classnames("task-item", { "task-done": task.done })}
           >
-            {index + 1}. {task.title}
+            {task.title}
           </div>
 
           <Button

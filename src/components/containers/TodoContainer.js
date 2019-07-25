@@ -1,18 +1,21 @@
 import React, { Component } from "react";
 import { Container, Row, Col, Modal, Button } from "react-bootstrap";
+import "rc-pagination/assets/index.css";
 
 // components
 import AddTaskForm from "../todos/AddTaskForm";
 import TasksList from "../todos/TasksList/TasksList";
 import SortTasksBlock from "../todos/SortTasksBlock";
+import Pagination from "rc-pagination";
 
 class Todo extends Component {
   state = {
     tasks: [],
     searchQuery: "",
     filter: "all",
-    removeAllItems: false,
-    showModal: false
+    showModal: false,
+    tasksPerPage: 5,
+    currentPage: 1
   };
 
   openModal = (e) => {
@@ -69,6 +72,15 @@ class Todo extends Component {
     );
   };
 
+  paginateTasks = (tasks) => {
+    const indexOfLastTask = this.state.currentPage * this.state.tasksPerPage;
+    const indexOfFirstTask = indexOfLastTask - this.state.tasksPerPage;
+
+    return tasks.slice(indexOfFirstTask, indexOfLastTask);
+  };
+
+  changeCurrentPage = (page) => this.setState({ currentPage: page });
+
   componentDidMount() {
     // firsty saving to state from localStorage
     this.setState({
@@ -82,6 +94,7 @@ class Todo extends Component {
 
   render() {
     const { tasks, filter, searchQuery } = this.state;
+    const filteredTasks = this.getFilteredTasks(tasks, filter, searchQuery);
     return (
       <>
         <Modal show={this.state.showModal} onHide={this.closeModal}>
@@ -114,15 +127,27 @@ class Todo extends Component {
           </Row>
 
           <Row>
-            <Col md={{ span: 6, offset: 3 }}>
+            <Col md={{ span: 6, offset: 3 }} className="d-flex flex-column">
               <AddTaskForm tasks={tasks} handleAddTask={this.addTask} />
 
               <TasksList
-                tasks={this.getFilteredTasks(tasks, filter, searchQuery)}
+                tasks={this.paginateTasks(filteredTasks)}
                 onRemoveTask={this.removeTask}
                 onToggleTaskDone={this.toggleTaskDone}
               />
+
+              <Pagination
+                className="ant-pagination align-self-center mt-2"
+                current={this.state.currentPage}
+                total={filteredTasks.length}
+                onChange={this.changeCurrentPage}
+                pageSize={this.state.tasksPerPage}
+              />
             </Col>
+          </Row>
+
+          <Row>
+            <Col md={1} className="mx-auto" />
           </Row>
         </Container>
       </>
