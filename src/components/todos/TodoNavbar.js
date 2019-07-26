@@ -12,11 +12,11 @@ const TodoNavbar = () => {
         <Navbar.Toggle aria-controls="todo-navbar-nav" />
         <Navbar.Collapse id="todo-navbar-nav">
           <Nav className="ml-auto">
-            <Nav.Link as={NavLink} to="/sign_up" activeClassName="active">
+            <Nav.Link as={NavLink} to="/sign-up" activeClassName="active">
               Sign up
             </Nav.Link>
-            <Nav.Link as={NavLink} to="/sign_in" activeClassName="active">
-              Sign in
+            <Nav.Link as={NavLink} to="/login" activeClassName="active">
+              Log in
             </Nav.Link>
           </Nav>
         </Navbar.Collapse>

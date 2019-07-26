@@ -1,10 +1,9 @@
 import React, { Component } from "react";
-import uuid from "uuid";
 import { Container, Row, Col, Form, Button, Card } from "react-bootstrap";
 import { Formik } from "formik";
 import * as Yup from "yup";
 
-const signUpSchema = Yup.object().shape({
+const signInSchema = Yup.object().shape({
   username: Yup.string()
     .trim()
     .lowercase()
@@ -16,34 +15,30 @@ const signUpSchema = Yup.object().shape({
     .required("Email field is required")
 });
 
-class SignUpForm extends Component {
-  state = { username: "", email: "" };
+class LoginForm extends Component {
+  state = { username: "", email: "", userdata: {} };
 
   handleSubmitForm = (values, actions) => {
-    const { username, email } =
-      JSON.parse(localStorage.getItem("userdata")) || {};
+    const { username, email } = values;
+    const { userdata } = this.state;
 
-    if (username === values.username) {
-      actions.setFieldError("username", "User is already exist!");
+    if (userdata.username !== username) {
+      actions.setFieldError("username", "Name is not exist");
       return;
     }
 
-    if (email === values.email) {
-      actions.setFieldError("email", "Email is already exist!");
+    if (userdata.email !== email) {
+      actions.setFieldError("email", "Email is not exist");
       return;
     }
 
-    localStorage.setItem(
-      "userdata",
-      JSON.stringify({
-        id: uuid(),
-        username: values.username.toLowerCase(),
-        email: values.email
-      })
-    );
+    alert("Logged successfuly!");
     actions.resetForm(this.state);
   };
 
+  componentDidMount() {
+    this.setState({ userdata: JSON.parse(localStorage.getItem("userdata")) });
+  }
   render() {
     return (
       <Container>
@@ -51,11 +46,12 @@ class SignUpForm extends Component {
           <Col sm={{ span: 6, offset: 3 }} className="mt-5">
             <Card>
               <Card.Body>
-                <h3 className="display-4 text-center">Sign Up</h3>
+                <h3 className="display-4 text-center">Sign In</h3>
+
                 <Formik
                   initialValues={this.state}
-                  validationSchema={signUpSchema}
                   onSubmit={this.handleSubmitForm}
+                  validationSchema={signInSchema}
                 >
                   {({ handleSubmit, handleChange, values, errors }) => (
                     <Form noValidate onSubmit={handleSubmit}>
@@ -67,7 +63,7 @@ class SignUpForm extends Component {
                           value={values.username}
                           onChange={handleChange}
                           isInvalid={!!errors.username}
-                          placeholder="Choose a username"
+                          placeholder="Username"
                         />
                         <Form.Control.Feedback type="invalid">
                           {errors.username}
@@ -82,7 +78,7 @@ class SignUpForm extends Component {
                           value={values.email}
                           onChange={handleChange}
                           isInvalid={!!errors.email}
-                          placeholder="Choose a email address"
+                          placeholder="your.awesome@gmail.com"
                         />
                         <Form.Control.Feedback type="invalid">
                           {errors.email}
@@ -90,7 +86,7 @@ class SignUpForm extends Component {
                       </Form.Group>
 
                       <Button type="submit" variant="info">
-                        Sign Up
+                        Sign In
                       </Button>
                     </Form>
                   )}
@@ -104,4 +100,4 @@ class SignUpForm extends Component {
   }
 }
 
-export default SignUpForm;
+export default LoginForm;

@@ -4,8 +4,8 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 // components
 import TodoNavbar from "./todos/TodoNavbar";
 import Todo from "./pages/TodoPage";
-import SignInForm from "./pages/SignInPage";
-import SignUpForm from "./pages/SignUpPage";
+import LoginPage from "./pages/LoginPage";
+import SignUpPage from "./pages/SignUpPage";
 
 const Navigation = () => {
   return (
@@ -13,8 +13,8 @@ const Navigation = () => {
       <TodoNavbar />
       <Switch>
         <Route path="/" exact component={Todo} />
-        <Route path="/sign_in" component={SignInForm} />
-        <Route path="/sign_up" component={SignUpForm} />
+        <Route path="/login" component={LoginPage} />
+        <Route path="/sign-up" component={SignUpPage} />
         <Route render={() => <h1>Page is not found...</h1>} />
       </Switch>
     </Router>
