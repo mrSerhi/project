@@ -1,13 +1,11 @@
 import React, { Component } from "react";
 import { Container, Row, Col, Modal, Button } from "react-bootstrap";
-import "rc-pagination/assets/index.css";
-import localeInfo from "rc-pagination/lib/locale/en_US";
 
 // components
 import AddTaskForm from "../todos/AddTaskForm";
 import TasksList from "../todos/TasksList/TasksList";
 import SortTasksBlock from "../todos/SortTasksBlock";
-import Pagination from "rc-pagination";
+import Pagination from "../todos/Pagination";
 
 class Todo extends Component {
   state = {
@@ -15,7 +13,7 @@ class Todo extends Component {
     searchQuery: "",
     filter: "all",
     showModal: false,
-    tasksPerPage: 5,
+    limit: 5,
     currentPage: 1
   };
 
@@ -73,11 +71,11 @@ class Todo extends Component {
     );
   };
 
-  paginateTasks = (tasks) => {
-    const indexOfLastTask = this.state.currentPage * this.state.tasksPerPage;
-    const indexOfFirstTask = indexOfLastTask - this.state.tasksPerPage;
+  paginateTasks = (tasks, currentPage, limit) => {
+    const offset = currentPage * limit;
+    const index = offset - limit;
 
-    return tasks.slice(indexOfFirstTask, indexOfLastTask);
+    return tasks.slice(index, offset);
   };
 
   changeCurrentPage = (page) => this.setState({ currentPage: page });
@@ -89,12 +87,22 @@ class Todo extends Component {
     });
   }
 
-  componentDidUpdate() {
+  componentDidUpdate(prevProps, prevState) {
     localStorage.setItem("tasks", JSON.stringify(this.state.tasks));
+
+    // pagination
+    // returns back if currentPage number is biggest than number of all pages
+    // exp: allPages = 5/5 -> 1; currPage = 2; {2 > 1 and [] is not empty} -> currentPage - 1
+    const { tasks, limit } = this.state;
+    const countAllPages = Math.ceil(tasks.length / limit);
+
+    if (prevState.currentPage > countAllPages && tasks.length) {
+      this.setState({ currentPage: prevState.currentPage - 1 });
+    }
   }
 
   render() {
-    const { tasks, filter, searchQuery } = this.state;
+    const { tasks, filter, searchQuery, currentPage, limit } = this.state;
     const filteredTasks = this.getFilteredTasks(tasks, filter, searchQuery);
     return (
       <>
@@ -132,18 +140,16 @@ class Todo extends Component {
               <AddTaskForm tasks={tasks} handleAddTask={this.addTask} />
 
               <TasksList
-                tasks={this.paginateTasks(filteredTasks)}
+                tasks={this.paginateTasks(filteredTasks, currentPage, limit)}
                 onRemoveTask={this.removeTask}
                 onToggleTaskDone={this.toggleTaskDone}
               />
 
               <Pagination
-                className="ant-pagination align-self-center mt-2"
-                current={this.state.currentPage}
-                total={tasks.length}
-                onChange={this.changeCurrentPage}
-                pageSize={this.state.tasksPerPage}
-                locale={localeInfo}
+                itemsTotal={filteredTasks.length}
+                limit={limit}
+                currentPage={currentPage}
+                onPaginate={this.changeCurrentPage}
               />
             </Col>
           </Row>

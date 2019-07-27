@@ -2,7 +2,7 @@ import React from "react";
 import { ListGroup, Button } from "react-bootstrap";
 import PropTypes from "prop-types";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTimes } from "@fortawesome/free-solid-svg-icons";
+import { faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 import classnames from "classnames";
 
 const TasksListGroup = ({ tasks, onRemoveTask, onToggleTaskDone }) => {
@@ -23,7 +23,7 @@ const TasksListGroup = ({ tasks, onRemoveTask, onToggleTaskDone }) => {
             size="sm"
             className="task-remove__button"
           >
-            <FontAwesomeIcon icon={faTimes} size="lg" />
+            <FontAwesomeIcon icon={faTrashAlt} size="lg" />
           </Button>
         </ListGroup.Item>
       ))}
