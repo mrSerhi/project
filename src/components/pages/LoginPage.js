@@ -30,29 +30,43 @@ class LoginForm extends Component {
 
   handleSubmitForm = (values, actions) => {
     const { username, email } = values;
-    const userData = JSON.parse(localStorage.getItem("userdata"));
+    const users = JSON.parse(localStorage.getItem("users")) || [];
+    const errors = {};
+    let currentUser;
 
-    if (userData.username !== username) {
-      actions.setFieldError("username", "Name is not exist");
-      return;
+    if (users.length > 0) {
+      currentUser = users.filter((user) => {
+        if (user.username !== username) {
+          errors.username = "Username is not found...";
+        }
+
+        if (user.email !== email) {
+          errors.email = "Email is not found...";
+        }
+
+        return user.email === email;
+      });
+    } else {
+      errors.email = "User is not registered yet";
     }
 
-    if (userData.email !== email) {
-      actions.setFieldError("email", "Email is not exist");
-      return;
-    }
+    if (!Object.keys(errors).length) {
+      // set to localStorage currently logged user
+      localStorage.setItem(
+        "current-user",
+        JSON.stringify({
+          ...currentUser,
+          isLogged: true
+        })
+      );
 
-    actions.resetForm(this.state);
-    this.setState({ isLogged: true });
-    // set user like was auth
-    userData.isLogged = true;
-    localStorage.setItem("userdata", JSON.stringify(userData));
-    setTimeout(() => this.props.history.push("/"), 1500);
+      actions.resetForm(this.state);
+      this.setState({ isLogged: true });
+      setTimeout(() => this.props.history.push("/"), 1500);
+    } else {
+      return actions.setErrors(errors);
+    }
   };
-
-  componentDidMount() {
-    this.setState({ userdata: JSON.parse(localStorage.getItem("userdata")) });
-  }
 
   render() {
     if (this.state.isLogged) {
@@ -74,14 +88,19 @@ class LoginForm extends Component {
     return (
       <Container>
         <Row>
-          <Col sm={{ span: 6, offset: 3 }} className="mt-5">
+          <Col sm={{ span: 8, offset: 2 }} className="mt-5">
             <Alert variant="warning" className="mb-5 text-center">
               <p className="lead">To use the Todos you must be authorized</p>
               <p className="lead">
-                If you not registered yet, you can follow the link{" "}
-                <Link to="/sign-up">Sign Up</Link>
+                If you not registered yet, you can follow{" "}
+                <Link to="/sign-up">Sign Up</Link> and create accound
               </p>
             </Alert>
+          </Col>
+        </Row>
+
+        <Row>
+          <Col sm={{ span: 6, offset: 3 }} className="mt-2">
             <Card>
               <Card.Body>
                 <h3 className="display-4 text-center">Log In</h3>

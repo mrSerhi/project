@@ -5,28 +5,29 @@ import { NavLink } from "react-router-dom";
 import { withRouter } from "react-router-dom";
 
 class TodoNavbar extends Component {
-  state = { userData: {} };
+  state = { currentUser: {} };
 
   handleLogout = () => {
-    const userData = { ...this.state.userData };
-    userData.isLogged = !userData.isLogged;
-    this.setState({ userData });
-    localStorage.setItem("userdata", JSON.stringify(userData));
+    // const currentUser = { ...this.state.currentUser };
+    // currentUser.isLogged = !userData.isLogged;
+    this.setState({ currentUser: {} });
+    localStorage.setItem("current-user", JSON.stringify({}));
   };
-
-  componentDidMount() {
-    this.setState({
-      userData: JSON.parse(localStorage.getItem("userdata")) || {}
-    });
-  }
 
   componentDidUpdate(prevProps) {
     if (prevProps.location.pathname !== this.props.location.pathname) {
       this.setState({
-        userData: JSON.parse(localStorage.getItem("userdata"))
+        currentUser: JSON.parse(localStorage.getItem("current-user")) || {}
       });
     }
   }
+
+  componentDidMount() {
+    // this.setState({
+    //   currentUser: JSON.parse(localStorage.getItem("current-user")) || {}
+    // });
+  }
+
   render() {
     return (
       <Navbar bg="info" variant="dark" expand="lg">
@@ -36,7 +37,7 @@ class TodoNavbar extends Component {
           </Navbar.Brand>
           <Navbar.Toggle aria-controls="todo-navbar-nav" />
           <Navbar.Collapse id="todo-navbar-nav">
-            {!this.state.userData.isLogged ? (
+            {!this.state.currentUser.isLogged ? (
               <Nav className="ml-auto">
                 <Nav.Link as={NavLink} to="/sign-up" activeClassName="active">
                   Sign up

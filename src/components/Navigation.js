@@ -10,8 +10,9 @@ const PrivetRoute = ({ component: Component, ...rest }) => (
   <Route
     {...rest}
     render={(props) => {
-      const userdata = JSON.parse(localStorage.getItem("userdata")) || {};
-      return userdata.isLogged ? (
+      const currentUser =
+        JSON.parse(localStorage.getItem("current-user")) || {};
+      return currentUser.isLogged ? (
         <Component {...props} />
       ) : (
         <Redirect to="/login" />

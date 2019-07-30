@@ -12,6 +12,7 @@ import {
 import { Formik } from "formik";
 import * as Yup from "yup";
 
+// validation YUP schema
 const signUpSchema = Yup.object().shape({
   username: Yup.string()
     .min(3, "Name should be longest than 3 characters")
@@ -22,44 +23,65 @@ const signUpSchema = Yup.object().shape({
     .required("Email is required"),
   password: Yup.string()
     .min(6, "Password has to be longer than 6 characters!")
-    .required("Password is required!")
+    .required("Password is required!"),
+  confirmPassword: Yup.string()
+    .oneOf([Yup.ref("password"), null], "Passwords must be the same")
+    .required("Confirm Password is required")
 });
 
 class SignUpForm extends Component {
-  state = { username: "", email: "", password: "", showModal: false };
+  state = {
+    username: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+    showModal: false
+  };
 
   handleSubmitForm = (values, actions) => {
-    this.setState({ showModal: false });
-    const { username, email } =
-      JSON.parse(localStorage.getItem("userdata")) || {};
+    const registaredUsers = JSON.parse(localStorage.getItem("users")) || [];
+    const errors = {};
 
-    if (username === values.username) {
-      actions.setFieldError("username", "User is already exist!");
-      return;
+    if (registaredUsers.length > 0) {
+      registaredUsers.find((user) => {
+        if (user.username === values.username) {
+          return (errors.username = "Username already exist");
+        }
+
+        if (user.email === values.email) {
+          return (errors.email = "Email already exist");
+        }
+
+        return user;
+      });
     }
 
-    if (email === values.email) {
-      actions.setFieldError("email", "Email is already exist!");
-      return;
+    if (!Object.keys(errors).length) {
+      localStorage.setItem(
+        "users",
+        JSON.stringify([
+          ...registaredUsers,
+          {
+            id: uuid(),
+            username: values.username,
+            email: values.email,
+            password: values.password
+          }
+        ])
+      );
+      actions.resetForm(this.state);
+      this.setState({ showModal: true });
+    } else {
+      return actions.setErrors(errors);
     }
-
-    localStorage.setItem(
-      "userdata",
-      JSON.stringify({
-        id: uuid(),
-        username: values.username.toLowerCase(),
-        email: values.email,
-        password: values.password
-      })
-    );
-    actions.resetForm(this.state);
-    this.setState({ showModal: true });
   };
+
+  hideModal = () => this.setState({ showModal: false });
 
   render() {
     return (
       <>
-        <Modal show={this.state.showModal}>
+        <Modal show={this.state.showModal} onHide={this.hideModal}>
           <Modal.Body className="text-center">
             <h4 className="text-success">Registration is successfuly done!</h4>
             <p>Want to go to the login page?</p>
@@ -71,10 +93,7 @@ class SignUpForm extends Component {
               >
                 Log in
               </Button>
-              <Button
-                onClick={() => this.setState({ showModal: false })}
-                variant="danger"
-              >
+              <Button onClick={this.hideModal} variant="danger">
                 Stay here
               </Button>
             </Modal.Footer>
@@ -142,6 +161,24 @@ class SignUpForm extends Component {
                           />
                           <Form.Control.Feedback type="invalid">
                             {errors.password}
+                          </Form.Control.Feedback>
+                        </Form.Group>
+
+                        <Form.Group controlId="validationUserConfirmPassword">
+                          <Form.Label>Сonfirm Password</Form.Label>
+                          <Form.Control
+                            type="password"
+                            name="confirmPassword"
+                            value={values.confirmPassword}
+                            onChange={handleChange}
+                            isInvalid={
+                              !!errors.confirmPassword &&
+                              touched.confirmPassword
+                            }
+                            placeholder="Сonfirm Password"
+                          />
+                          <Form.Control.Feedback type="invalid">
+                            {errors.confirmPassword}
                           </Form.Control.Feedback>
                         </Form.Group>
 
