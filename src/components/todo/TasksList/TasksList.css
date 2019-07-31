@@ -18,14 +18,14 @@
   transition: all 0.4s ease-in;
 }
 
-.task-remove__button {
+.remove-task {
   color: rgb(170, 25, 25);
   background: rgba(230, 230, 230, 0.4);
   transition: all 0.4s ease-in;
 }
 
-.task-remove__button:hover,
-.task-remove__button:active {
+.remove-task:hover,
+.remove-task:active {
   color: rgba(170, 25, 25, 0.7);
   transform: translateY(-0.2rem);
   box-shadow: 3px 13px 18px -10px rgba(0, 0, 0, 0.75);

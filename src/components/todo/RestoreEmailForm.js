@@ -20,28 +20,28 @@ class RestoreEmailForm extends Component {
     password: "",
     restored: false,
     email: "",
-    notFindedUser: false
+    notFondedUser: false
   };
 
   handleSubmitForm = (values, actions) => {
     const users = JSON.parse(localStorage.getItem("users"));
     const { username, password } = values;
-    const findedUser = users.find((user) => user.username === username);
+    const foundUser = users.find((user) => user.username === username);
     const errors = {};
 
-    if (findedUser === undefined) {
-      this.setState({ notFindedUser: true, restored: false });
+    if (foundUser === undefined) {
+      this.setState({ notFondedUser: true, restored: false });
       return;
-    } else if (findedUser !== undefined && findedUser.password !== password) {
-      errors.password = "Wrong password. Type yours accound password";
+    } else if (foundUser !== undefined && foundUser.password !== password) {
+      errors.password = "Wrong password. Type yours account password";
     }
 
     if (!Object.keys(errors).length) {
       // set restored email address to state
       this.setState({
-        email: findedUser.email,
+        email: foundUser.email,
         restored: true,
-        notFindedUser: false
+        notFondedUser: false
       });
       actions.resetForm(this.state);
     } else {
@@ -128,7 +128,7 @@ class RestoreEmailForm extends Component {
               Your email: {this.state.restored && <b>{this.state.email}</b>}
             </Alert>
 
-            {!!this.state.notFindedUser && (
+            {!!this.state.notFondedUser && (
               <Alert variant="danger">
                 User is not found... Try <Link to="/sign-up">Sign Up</Link>
               </Alert>

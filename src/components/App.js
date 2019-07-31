@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import Navigation from "./Navigation";
 import { BrowserRouter as Router } from "react-router-dom";
-import Navbar from "./UI/Navbar";
+import Navbar from "./ui/Navbar";
 
 class App extends Component {
   render() {

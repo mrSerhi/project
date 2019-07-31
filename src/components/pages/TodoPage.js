@@ -2,44 +2,44 @@ import React, { Component } from "react";
 import { Container, Row, Col, Modal, Button } from "react-bootstrap";
 
 // components
-import AddTaskForm from "../todos/AddTaskForm";
-import TasksList from "../todos/TasksList/TasksList";
-import SortTasksBlock from "../todos/SortTasksBlock";
-import Pagination from "../todos/Pagination";
+import AddTaskForm from "../todo/AddTaskForm";
+import TasksList from "../todo/TasksList/TasksList";
+import SortTasksBlock from "../todo/SortTasksBlock";
+import Pagination from "../todo/Pagination";
 
 class Todo extends Component {
   state = {
     tasks: [],
     searchQuery: "",
-    filter: "all",
-    showModal: false,
+    itemsFilter: "all",
+    TasksRemoveModalIn: false,
     limit: 5,
     currentPage: 1
   };
 
-  openModal = (e) => {
+  onTasksRemoveModalIn = (e) => {
     e.preventDefault();
-    this.setState({ showModal: true });
+    this.setState({ TasksRemoveModalIn: true });
   };
 
-  closeModal = () => this.setState({ showModal: false });
+  onTasksRemoveModalOut = () => this.setState({ TasksRemoveModalIn: false });
 
   addTask = (task) => {
     this.setState({ tasks: [...this.state.tasks, task] });
   };
 
-  removeTask = (id) => {
+  onRemoveTask = (id) => {
     this.setState({ tasks: this.state.tasks.filter((task) => task.id !== id) });
   };
 
   removeAllCompletedTasks = () => {
     this.setState({
       tasks: this.state.tasks.filter((task) => !task.done),
-      showModal: false
+      TasksRemoveModalIn: false
     });
   };
 
-  toggleTaskDone = (id) => {
+  onToggleTaskDone = (id) => {
     this.setState({
       tasks: this.state.tasks.map((task) =>
         task.id !== id ? task : { ...task, done: !task.done }
@@ -49,7 +49,7 @@ class Todo extends Component {
 
   setSearchQuery = (searchQuery) => this.setState({ searchQuery });
 
-  setTaskFilter = (filter) => this.setState({ filter });
+  setTaskFilter = (filter) => this.setState({ itemsFilter: filter });
 
   getFilteredTasks = (tasks, filter, searchQuery) => {
     const preparedQuery = searchQuery.trim().toLowerCase();
@@ -78,10 +78,10 @@ class Todo extends Component {
     return tasks.slice(index, offset);
   };
 
-  changeCurrentPage = (page) => this.setState({ currentPage: page });
+  onPaginateChangeCurrentPage = (page) => this.setState({ currentPage: page });
 
   componentDidMount() {
-    // firsty saving to state from localStorage
+    // at first saving to state from localStorage
     this.setState({
       tasks: JSON.parse(localStorage.getItem("tasks")) || []
     });
@@ -102,22 +102,29 @@ class Todo extends Component {
   }
 
   render() {
-    const { tasks, filter, searchQuery, currentPage, limit } = this.state;
-    const filteredTasks = this.getFilteredTasks(tasks, filter, searchQuery);
+    const { tasks, itemsFilter, searchQuery, currentPage, limit } = this.state;
+    const filteredTasks = this.getFilteredTasks(
+      tasks,
+      itemsFilter,
+      searchQuery
+    );
     return (
       <>
-        <Modal show={this.state.showModal} onHide={this.closeModal}>
+        <Modal
+          show={this.state.TasksRemoveModalIn}
+          onHide={this.onTasksRemoveModalOut}
+        >
           <Modal.Header closeButton>
             <h4>Are you sure?</h4>
           </Modal.Header>
           <Modal.Body>
-            <p className="lead">All complated tasks will be deleted!</p>
+            <p className="lead">All completed tasks will be deleted!</p>
           </Modal.Body>
           <Modal.Footer>
             <Button onClick={this.removeAllCompletedTasks} variant="danger">
               Remove
             </Button>
-            <Button onClick={this.closeModal} variant="info">
+            <Button onClick={this.onTasksRemoveModalOut} variant="info">
               Cancel
             </Button>
           </Modal.Footer>
@@ -128,9 +135,10 @@ class Todo extends Component {
             <Col md={{ span: 8, offset: 2 }} className="mb-2">
               <SortTasksBlock
                 tasks={tasks}
-                onSetTaskFilter={this.setTaskFilter}
+                itemsFilter={itemsFilter}
+                setTaskFilter={this.setTaskFilter}
                 setSearchQuery={this.setSearchQuery}
-                openModal={this.openModal}
+                tasksRemoveModalIn={this.onTasksRemoveModalIn}
               />
             </Col>
           </Row>
@@ -141,15 +149,15 @@ class Todo extends Component {
 
               <TasksList
                 tasks={this.paginateTasks(filteredTasks, currentPage, limit)}
-                onRemoveTask={this.removeTask}
-                onToggleTaskDone={this.toggleTaskDone}
+                removeTask={this.onRemoveTask}
+                toggleTaskDone={this.onToggleTaskDone}
               />
 
               <Pagination
                 itemsTotal={filteredTasks.length}
-                limit={limit}
+                itemsLimit={limit}
                 currentPage={currentPage}
-                onPaginate={this.changeCurrentPage}
+                paginate={this.onPaginateChangeCurrentPage}
               />
             </Col>
           </Row>

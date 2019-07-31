@@ -13,16 +13,12 @@ import {
 import { Formik } from "formik";
 import * as Yup from "yup";
 import { Link } from "react-router-dom";
-import RestoreEmailForm from "../todos/RestoreEmailForm";
+import RestoreEmailForm from "../todo/RestoreEmailForm";
 
 const signInSchema = Yup.object().shape({
   email: Yup.string()
     .email("Type a valid email address")
     .required("Email is required"),
-  // username: Yup.string()
-  //   .min(3, "Name should be longest than 3 characters")
-  //   .max(20, "Name should be shorter than 20 characters")
-  //   .required("Name is required")
   password: Yup.string()
     .min(6, "Password has to be longer than 6 characters!")
     .required("Password is required!")
