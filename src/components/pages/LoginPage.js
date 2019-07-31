@@ -19,23 +19,26 @@ const signInSchema = Yup.object().shape({
   email: Yup.string()
     .email("Type a valid email address")
     .required("Email is required"),
-  username: Yup.string()
-    .min(3, "Name should be longest than 3 characters")
-    .max(20, "Name should be shorter than 20 characters")
-    .required("Name is required")
+  // username: Yup.string()
+  //   .min(3, "Name should be longest than 3 characters")
+  //   .max(20, "Name should be shorter than 20 characters")
+  //   .required("Name is required")
+  password: Yup.string()
+    .min(6, "Password has to be longer than 6 characters!")
+    .required("Password is required!")
 });
 
 class LoginForm extends Component {
   state = {
     email: "",
-    username: "",
+    password: "",
     isLogged: false,
     showModal: false,
     usersExists: null
   };
 
   handleSubmitForm = (values, actions) => {
-    const { email, username } = values;
+    const { email, password } = values;
     const users = JSON.parse(localStorage.getItem("users")) || [];
     const errors = {};
     let currentUser = users.find((user) => user.email === email);
@@ -45,8 +48,8 @@ class LoginForm extends Component {
         "User not found. Maybe you're not register yet. If you forgot email, try to restore it";
     }
 
-    if (currentUser !== undefined && currentUser.username !== username) {
-      errors.username = "Username is wrong. Type yours account username";
+    if (currentUser !== undefined && currentUser.password !== password) {
+      errors.password = "Wrong password. Type yours account password";
     }
 
     if (!Object.keys(errors).length) {
@@ -130,25 +133,6 @@ class LoginForm extends Component {
                       touched
                     }) => (
                       <Form noValidate onSubmit={handleSubmit}>
-                        <Form.Group controlId="validationUsername">
-                          <Form.Label>Username</Form.Label>
-                          <Form.Control
-                            type="text"
-                            name="username"
-                            value={values.username}
-                            onChange={handleChange}
-                            isInvalid={!!errors.username && touched.username}
-                            isValid={touched.username && !errors.username}
-                            placeholder="Username"
-                          />
-                          <Form.Control.Feedback type="invalid">
-                            {errors.username}
-                          </Form.Control.Feedback>
-                          <Form.Control.Feedback>
-                            Username accepted
-                          </Form.Control.Feedback>
-                        </Form.Group>
-
                         <Form.Group controlId="validationUserEmail">
                           <Form.Label>Email</Form.Label>
                           <Form.Control
@@ -165,6 +149,25 @@ class LoginForm extends Component {
                           </Form.Control.Feedback>
                           <Form.Control.Feedback>
                             Email accepted
+                          </Form.Control.Feedback>
+                        </Form.Group>
+
+                        <Form.Group controlId="validationUsername">
+                          <Form.Label>Password</Form.Label>
+                          <Form.Control
+                            type="password"
+                            name="password"
+                            value={values.password}
+                            onChange={handleChange}
+                            isInvalid={!!errors.password && touched.password}
+                            isValid={touched.password && !errors.password}
+                            placeholder="Password"
+                          />
+                          <Form.Control.Feedback type="invalid">
+                            {errors.password}
+                          </Form.Control.Feedback>
+                          <Form.Control.Feedback>
+                            Password accepted
                           </Form.Control.Feedback>
                         </Form.Group>
 
