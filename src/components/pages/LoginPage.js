@@ -7,19 +7,18 @@ import {
   Button,
   Card,
   Spinner,
-  Alert
+  Alert,
+  Modal
 } from "react-bootstrap";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import { Link } from "react-router-dom";
+import RestoreEmailForm from "../todos/RestoreEmailForm";
 
 const signInSchema = Yup.object().shape({
   email: Yup.string()
     .email("Type a valid email address")
     .required("Email is required"),
-  // password: Yup.string()
-  //   .min(6, "Password has to be longer than 6 characters!")
-  //   .required("Password is required"),
   username: Yup.string()
     .min(3, "Name should be longest than 3 characters")
     .max(20, "Name should be shorter than 20 characters")
@@ -27,26 +26,28 @@ const signInSchema = Yup.object().shape({
 });
 
 class LoginForm extends Component {
-  // state = { password: "", email: "", username: "", isLogged: false };
-  state = { email: "", username: "", isLogged: false };
+  state = {
+    email: "",
+    username: "",
+    isLogged: false,
+    showModal: false,
+    usersExists: null
+  };
 
   handleSubmitForm = (values, actions) => {
-    const { email, password, username } = values;
-    const users = JSON.parse(localStorage.getItem("users"));
+    const { email, username } = values;
+    const users = JSON.parse(localStorage.getItem("users")) || [];
     const errors = {};
     let currentUser = users.find((user) => user.email === email);
 
     if (currentUser === undefined) {
-      errors.email = "User is not found...Try to change email";
+      errors.email =
+        "User not found. Maybe you're not register yet. If you forgot email, try to restore it";
     }
 
     if (currentUser !== undefined && currentUser.username !== username) {
       errors.username = "Username is wrong. Type yours account username";
     }
-
-    // if (currentUser !== undefined && currentUser.password !== password) {
-    //   errors.password = "Password is not valid. Type yours account password";
-    // }
 
     if (!Object.keys(errors).length) {
       // set to localStorage currently logged user
@@ -66,6 +67,9 @@ class LoginForm extends Component {
     }
   };
 
+  showModal = () => this.setState({ showModal: true });
+  hideModal = () => this.setState({ showModal: false });
+
   render() {
     if (this.state.isLogged) {
       return (
@@ -76,7 +80,7 @@ class LoginForm extends Component {
               <Spinner animation="grow" variant="info" />
               <Spinner animation="grow" variant="info" />
 
-              <p className="text-muted">Preparing Todos</p>
+              <p className="text-muted">Preparing Todos...</p>
             </Col>
           </Row>
         </Container>
@@ -85,6 +89,15 @@ class LoginForm extends Component {
 
     return (
       <>
+        <Modal show={this.state.showModal} onHide={this.hideModal}>
+          <Modal.Header closeButton>
+            <Modal.Title>Restore Email</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <RestoreEmailForm />
+          </Modal.Body>
+        </Modal>
+
         <Container className="mb-5">
           <Row>
             <Col sm={{ span: 8, offset: 2 }} className="mt-5">
@@ -117,21 +130,6 @@ class LoginForm extends Component {
                       touched
                     }) => (
                       <Form noValidate onSubmit={handleSubmit}>
-                        <Form.Group controlId="validationUserEmail">
-                          <Form.Label>Email</Form.Label>
-                          <Form.Control
-                            type="text"
-                            name="email"
-                            value={values.email}
-                            onChange={handleChange}
-                            isInvalid={!!errors.email && touched.email}
-                            placeholder="your.awesome@gmail.com"
-                          />
-                          <Form.Control.Feedback type="invalid">
-                            {errors.email}
-                          </Form.Control.Feedback>
-                        </Form.Group>
-
                         <Form.Group controlId="validationUsername">
                           <Form.Label>Username</Form.Label>
                           <Form.Control
@@ -140,10 +138,33 @@ class LoginForm extends Component {
                             value={values.username}
                             onChange={handleChange}
                             isInvalid={!!errors.username && touched.username}
+                            isValid={touched.username && !errors.username}
                             placeholder="Username"
                           />
                           <Form.Control.Feedback type="invalid">
                             {errors.username}
+                          </Form.Control.Feedback>
+                          <Form.Control.Feedback>
+                            Username accepted
+                          </Form.Control.Feedback>
+                        </Form.Group>
+
+                        <Form.Group controlId="validationUserEmail">
+                          <Form.Label>Email</Form.Label>
+                          <Form.Control
+                            type="email"
+                            name="email"
+                            value={values.email}
+                            onChange={handleChange}
+                            isInvalid={!!errors.email && touched.email}
+                            isValid={touched.email && !errors.email}
+                            placeholder="your.awesome@gmail.com"
+                          />
+                          <Form.Control.Feedback type="invalid">
+                            {errors.email}
+                          </Form.Control.Feedback>
+                          <Form.Control.Feedback>
+                            Email accepted
                           </Form.Control.Feedback>
                         </Form.Group>
 
@@ -151,7 +172,9 @@ class LoginForm extends Component {
                           Log In
                         </Button>
 
-                        <Button variant="link">Forgot email?</Button>
+                        <Button variant="link" onClick={this.showModal}>
+                          Forgot email?
+                        </Button>
                       </Form>
                     )}
                   </Formik>

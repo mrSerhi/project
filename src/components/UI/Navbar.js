@@ -1,4 +1,3 @@
-// import React from "react";
 import React, { Component } from "react";
 import { Navbar, Container, Nav } from "react-bootstrap";
 import { NavLink } from "react-router-dom";
@@ -8,8 +7,6 @@ class TodoNavbar extends Component {
   state = { currentUser: {} };
 
   handleLogout = () => {
-    // const currentUser = { ...this.state.currentUser };
-    // currentUser.isLogged = !userData.isLogged;
     this.setState({ currentUser: {} });
     localStorage.setItem("current-user", JSON.stringify({}));
   };
@@ -21,13 +18,6 @@ class TodoNavbar extends Component {
       });
     }
   }
-
-  componentDidMount() {
-    // this.setState({
-    //   currentUser: JSON.parse(localStorage.getItem("current-user")) || {}
-    // });
-  }
-
   render() {
     return (
       <Navbar bg="info" variant="dark" expand="lg">

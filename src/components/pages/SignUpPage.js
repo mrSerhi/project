@@ -45,11 +45,11 @@ class SignUpForm extends Component {
     if (registaredUsers.length > 0) {
       registaredUsers.find((user) => {
         if (user.username === values.username) {
-          return (errors.username = "Username already exist");
+          errors.username = "Username already exist";
         }
 
         if (user.email === values.email) {
-          return (errors.email = "Email already exist");
+          errors.email = "Email already exist";
         }
 
         return user;
@@ -127,10 +127,15 @@ class SignUpForm extends Component {
                             value={values.username}
                             onChange={handleChange}
                             isInvalid={!!errors.username && touched.username}
+                            isValid={touched.username && !errors.username}
                             placeholder="Choose a username"
                           />
                           <Form.Control.Feedback type="invalid">
                             {errors.username}
+                          </Form.Control.Feedback>
+
+                          <Form.Control.Feedback>
+                            Username accepted
                           </Form.Control.Feedback>
                         </Form.Group>
 
@@ -142,10 +147,15 @@ class SignUpForm extends Component {
                             value={values.email}
                             onChange={handleChange}
                             isInvalid={!!errors.email && touched.email}
+                            isValid={touched.email && !errors.email}
                             placeholder="Choose a email address"
                           />
                           <Form.Control.Feedback type="invalid">
                             {errors.email}
+                          </Form.Control.Feedback>
+
+                          <Form.Control.Feedback>
+                            Email accepted
                           </Form.Control.Feedback>
                         </Form.Group>
 
@@ -157,10 +167,15 @@ class SignUpForm extends Component {
                             value={values.password}
                             onChange={handleChange}
                             isInvalid={!!errors.password && touched.password}
+                            isValid={touched.password && !errors.password}
                             placeholder="Type a password"
                           />
                           <Form.Control.Feedback type="invalid">
                             {errors.password}
+                          </Form.Control.Feedback>
+
+                          <Form.Control.Feedback>
+                            Password accepted
                           </Form.Control.Feedback>
                         </Form.Group>
 
@@ -175,10 +190,17 @@ class SignUpForm extends Component {
                               !!errors.confirmPassword &&
                               touched.confirmPassword
                             }
+                            isValid={
+                              touched.confirmPassword && !errors.confirmPassword
+                            }
                             placeholder="Сonfirm Password"
                           />
                           <Form.Control.Feedback type="invalid">
                             {errors.confirmPassword}
+                          </Form.Control.Feedback>
+
+                          <Form.Control.Feedback>
+                            Confirm password accepted
                           </Form.Control.Feedback>
                         </Form.Group>
 
