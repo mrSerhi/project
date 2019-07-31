@@ -100,7 +100,7 @@ class SignUpForm extends Component {
           </Modal.Body>
         </Modal>
 
-        <Container>
+        <Container className="mb-5">
           <Row>
             <Col sm={{ span: 6, offset: 3 }} className="mt-5">
               <Card>

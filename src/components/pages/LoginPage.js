@@ -14,40 +14,27 @@ import * as Yup from "yup";
 import { Link } from "react-router-dom";
 
 const signInSchema = Yup.object().shape({
-  username: Yup.string()
-    .trim()
-    .lowercase()
-    .min(2, "Name should be longest than 3 characters")
-    .max(20, "Name should be shorter than 20 characters")
-    .required("Name field is required"),
   email: Yup.string()
     .email("Type a valid email address")
-    .required("Email field is required")
+    .required("Email is required"),
+  password: Yup.string()
+    .min(6, "Password has to be longer than 6 characters!")
+    .required("Password is required")
 });
 
 class LoginForm extends Component {
-  state = { username: "", email: "", isLogged: false };
+  state = { password: "", email: "", isLogged: false };
 
   handleSubmitForm = (values, actions) => {
-    const { username, email } = values;
-    const users = JSON.parse(localStorage.getItem("users")) || [];
+    const { email, password } = values;
+    const users = JSON.parse(localStorage.getItem("users"));
     const errors = {};
-    let currentUser;
+    let currentUser = users.find(
+      (user) => user.email === email && user.password === password
+    );
 
-    if (users.length > 0) {
-      currentUser = users.filter((user) => {
-        if (user.username !== username) {
-          errors.username = "Username is not found...";
-        }
-
-        if (user.email !== email) {
-          errors.email = "Email is not found...";
-        }
-
-        return user.email === email;
-      });
-    } else {
-      errors.email = "User is not registered yet";
+    if (currentUser === undefined) {
+      errors.email = "User is not found...Try to change email and password";
     }
 
     if (!Object.keys(errors).length) {
@@ -86,7 +73,7 @@ class LoginForm extends Component {
     }
 
     return (
-      <Container>
+      <Container className="mb-5">
         <Row>
           <Col sm={{ span: 8, offset: 2 }} className="mt-5">
             <Alert variant="warning" className="mb-5 text-center">
@@ -118,21 +105,6 @@ class LoginForm extends Component {
                     touched
                   }) => (
                     <Form noValidate onSubmit={handleSubmit}>
-                      <Form.Group controlId="validationUserName">
-                        <Form.Label>Username</Form.Label>
-                        <Form.Control
-                          type="text"
-                          name="username"
-                          value={values.username}
-                          onChange={handleChange}
-                          isInvalid={!!errors.username && touched.username}
-                          placeholder="Username"
-                        />
-                        <Form.Control.Feedback type="invalid">
-                          {errors.username}
-                        </Form.Control.Feedback>
-                      </Form.Group>
-
                       <Form.Group controlId="validationUserEmail">
                         <Form.Label>Email</Form.Label>
                         <Form.Control
@@ -145,6 +117,21 @@ class LoginForm extends Component {
                         />
                         <Form.Control.Feedback type="invalid">
                           {errors.email}
+                        </Form.Control.Feedback>
+                      </Form.Group>
+
+                      <Form.Group controlId="validationPassword">
+                        <Form.Label>Password</Form.Label>
+                        <Form.Control
+                          type="password"
+                          name="password"
+                          value={values.password}
+                          onChange={handleChange}
+                          isInvalid={!!errors.password && touched.password}
+                          placeholder="Password"
+                        />
+                        <Form.Control.Feedback type="invalid">
+                          {errors.password}
                         </Form.Control.Feedback>
                       </Form.Group>
 
