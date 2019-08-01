@@ -1,52 +1,48 @@
-import React, { Component } from "react";
+import React, { useState } from "react";
 import uuid from "uuid";
 import PropTypes from "prop-types";
 import { Form, InputGroup, FormControl, Button } from "react-bootstrap";
 
-class AddTaskForm extends Component {
-  static propTypes = {
-    handleAddTask: PropTypes.func.isRequired
-  };
-
-  state = { title: "" };
-
-  addTaskOnSubmit = (e) => {
+const AddTaskForm = ({ handleAddTask }) => {
+  const [title, setTitle] = useState("");
+  const addTaskOnSubmit = (e) => {
     e.preventDefault();
 
-    if (this.state.title.trim() === "") return;
+    if (title.trim() === "") return;
 
     const newTask = {
       id: uuid(),
-      title: this.state.title,
+      title,
       done: false
     };
-    this.props.handleAddTask(newTask);
 
-    // clear input field
-    this.setState({ title: "" });
+    handleAddTask(newTask);
+
+    // clear search field
+    setTitle("");
   };
+  const changeTitleOnChange = (e) => setTitle(e.currentTarget.value);
+  return (
+    <Form onSubmit={addTaskOnSubmit}>
+      <InputGroup size="lg" className="mb-2">
+        <FormControl
+          placeholder="What needs to be done?"
+          onChange={changeTitleOnChange}
+          value={title}
+        />
 
-  handleTitleChanges = (e) => this.setState({ title: e.target.value });
+        <InputGroup.Append>
+          <Button variant="dark" type="submit">
+            Ok
+          </Button>
+        </InputGroup.Append>
+      </InputGroup>
+    </Form>
+  );
+};
 
-  render() {
-    return (
-      <Form onSubmit={this.addTaskOnSubmit}>
-        <InputGroup size="lg" className="mb-2">
-          <FormControl
-            placeholder="What needs to be done?"
-            onChange={this.handleTitleChanges}
-            value={this.state.title}
-          />
-
-          <InputGroup.Append>
-            <Button variant="dark" type="submit">
-              Ok
-            </Button>
-          </InputGroup.Append>
-        </InputGroup>
-      </Form>
-    );
-  }
-}
+AddTaskForm.propTypes = {
+  handleAddTask: PropTypes.func.isRequired
+};
 
 export default AddTaskForm;

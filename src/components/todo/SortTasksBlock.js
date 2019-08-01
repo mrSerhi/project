@@ -5,27 +5,23 @@ import { faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 import PropTypes from "prop-types";
 import classnames from "classnames";
 
-import SearchTaskForm from "./SearchTaskForm";
-
 const SortTasksBlock = ({
   setTaskFilter,
-  setSearchQuery,
   itemsFilter,
-  tasksRemoveModalIn,
+  toggleModalRemoveTasks,
   tasks
 }) => {
   return (
-    <Card bg="info" style={{ borderRadius: 0 }}>
+    <Card bg="info">
       <Card.Body className="text-white">
-        <SearchTaskForm setSearchQuery={setSearchQuery} />
         <Row>
-          <Col className="d-flex flex-column align-items-end">
+          <Col className="d-flex justify-content-between align-items-center">
             <span>
               {tasks.filter((task) => !task.done).length} task(s) left
             </span>
 
             <Button
-              onClick={tasksRemoveModalIn}
+              onClick={() => toggleModalRemoveTasks(true)}
               variant="link"
               className="text-warning"
             >
@@ -75,9 +71,7 @@ const SortTasksBlock = ({
 
 SortTasksBlock.propTypes = {
   setTaskFilter: PropTypes.func.isRequired,
-  setSearchQuery: PropTypes.func.isRequired,
   itemsFilter: PropTypes.string.isRequired,
-  tasksRemoveModalIn: PropTypes.func.isRequired,
   tasks: PropTypes.arrayOf(PropTypes.object)
 };
 

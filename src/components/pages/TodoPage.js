@@ -1,28 +1,27 @@
 import React, { Component } from "react";
-import { Container, Row, Col, Modal, Button } from "react-bootstrap";
+import { Container, Row, Col } from "react-bootstrap";
 
 // components
 import AddTaskForm from "../todo/AddTaskForm";
 import TasksList from "../todo/TasksList/TasksList";
 import SortTasksBlock from "../todo/SortTasksBlock";
 import Pagination from "../todo/Pagination";
+import SearchTaskForm from "../todo/SearchTaskForm";
+import TasksRemoveModal from "../modals/TasksRemoveModal";
 
 class Todo extends Component {
   state = {
     tasks: [],
     searchQuery: "",
     itemsFilter: "all",
-    TasksRemoveModalIn: false,
-    limit: 5,
+    tasksRemoveModalIn: false,
+    tasksLimit: 5,
     currentPage: 1
   };
 
-  onTasksRemoveModalIn = (e) => {
-    e.preventDefault();
-    this.setState({ TasksRemoveModalIn: true });
+  onToggleModalRemoveTasks = (status = false) => {
+    this.setState({ tasksRemoveModalIn: status });
   };
-
-  onTasksRemoveModalOut = () => this.setState({ TasksRemoveModalIn: false });
 
   addTask = (task) => {
     this.setState({ tasks: [...this.state.tasks, task] });
@@ -32,10 +31,10 @@ class Todo extends Component {
     this.setState({ tasks: this.state.tasks.filter((task) => task.id !== id) });
   };
 
-  removeAllCompletedTasks = () => {
+  removeCompletedTasks = () => {
     this.setState({
       tasks: this.state.tasks.filter((task) => !task.done),
-      TasksRemoveModalIn: false
+      tasksRemoveModalIn: false
     });
   };
 
@@ -71,9 +70,9 @@ class Todo extends Component {
     );
   };
 
-  paginateTasks = (tasks, currentPage, limit) => {
-    const offset = currentPage * limit;
-    const index = offset - limit;
+  paginateTasks = (tasks, currentPage, tasksLimit) => {
+    const offset = currentPage * tasksLimit;
+    const index = offset - tasksLimit;
 
     return tasks.slice(index, offset);
   };
@@ -93,8 +92,8 @@ class Todo extends Component {
     // pagination
     // returns back if currentPage number is biggest than number of all pages
     // exp: allPages = 5/5 -> 1; currPage = 2; {2 > 1 and [] is not empty} -> currentPage - 1
-    const { tasks, limit } = this.state;
-    const countAllPages = Math.ceil(tasks.length / limit);
+    const { tasks, tasksLimit } = this.state;
+    const countAllPages = Math.ceil(tasks.length / tasksLimit);
 
     if (prevState.currentPage > countAllPages && tasks.length) {
       this.setState({ currentPage: prevState.currentPage - 1 });
@@ -102,67 +101,61 @@ class Todo extends Component {
   }
 
   render() {
-    const { tasks, itemsFilter, searchQuery, currentPage, limit } = this.state;
+    const {
+      tasks,
+      itemsFilter,
+      searchQuery,
+      currentPage,
+      tasksLimit,
+      tasksRemoveModalIn
+    } = this.state;
     const filteredTasks = this.getFilteredTasks(
       tasks,
       itemsFilter,
       searchQuery
     );
     return (
-      <>
-        <Modal
-          show={this.state.TasksRemoveModalIn}
-          onHide={this.onTasksRemoveModalOut}
-        >
-          <Modal.Header closeButton>
-            <h4>Are you sure?</h4>
-          </Modal.Header>
-          <Modal.Body>
-            <p className="lead">All completed tasks will be deleted!</p>
-          </Modal.Body>
-          <Modal.Footer>
-            <Button onClick={this.removeAllCompletedTasks} variant="danger">
-              Remove
-            </Button>
-            <Button onClick={this.onTasksRemoveModalOut} variant="info">
-              Cancel
-            </Button>
-          </Modal.Footer>
-        </Modal>
+      <Container className="mt-3">
+        {!!tasksRemoveModalIn && (
+          <TasksRemoveModal
+            toggleModalRemoveTasks={this.onToggleModalRemoveTasks}
+            removeCompletedTasks={this.removeCompletedTasks}
+          />
+        )}
 
-        <Container className="mt-3">
-          <Row>
-            <Col md={{ span: 8, offset: 2 }} className="mb-2">
-              <SortTasksBlock
-                tasks={tasks}
-                itemsFilter={itemsFilter}
-                setTaskFilter={this.setTaskFilter}
-                setSearchQuery={this.setSearchQuery}
-                tasksRemoveModalIn={this.onTasksRemoveModalIn}
-              />
-            </Col>
-          </Row>
+        <Row>
+          <Col sm={{ span: 7 }}>
+            <SearchTaskForm setSearchQuery={this.setSearchQuery} />
+          </Col>
+          <Col sm={{ span: 5 }}>
+            <SortTasksBlock
+              tasks={tasks}
+              itemsFilter={itemsFilter}
+              setTaskFilter={this.setTaskFilter}
+              toggleModalRemoveTasks={this.onToggleModalRemoveTasks}
+            />
+          </Col>
+        </Row>
 
-          <Row>
-            <Col md={{ span: 6, offset: 3 }} className="d-flex flex-column">
-              <AddTaskForm tasks={tasks} handleAddTask={this.addTask} />
+        <Row>
+          <Col md={{ span: 6, offset: 3 }} className="d-flex flex-column mt-2">
+            <AddTaskForm tasks={tasks} handleAddTask={this.addTask} />
 
-              <TasksList
-                tasks={this.paginateTasks(filteredTasks, currentPage, limit)}
-                removeTask={this.onRemoveTask}
-                toggleTaskDone={this.onToggleTaskDone}
-              />
+            <TasksList
+              tasks={this.paginateTasks(filteredTasks, currentPage, tasksLimit)}
+              removeTask={this.onRemoveTask}
+              toggleTaskDone={this.onToggleTaskDone}
+            />
 
-              <Pagination
-                itemsTotal={filteredTasks.length}
-                itemsLimit={limit}
-                currentPage={currentPage}
-                paginate={this.onPaginateChangeCurrentPage}
-              />
-            </Col>
-          </Row>
-        </Container>
-      </>
+            <Pagination
+              itemsTotal={filteredTasks.length}
+              itemsLimit={tasksLimit}
+              currentPage={currentPage}
+              paginate={this.onPaginateChangeCurrentPage}
+            />
+          </Col>
+        </Row>
+      </Container>
     );
   }
 }
