@@ -6,7 +6,6 @@ import {
   Form,
   Button,
   Card,
-  Spinner,
   Alert,
   Modal
 } from "react-bootstrap";
@@ -14,6 +13,7 @@ import { Formik } from "formik";
 import * as Yup from "yup";
 import { Link } from "react-router-dom";
 import RestoreEmailForm from "../todo/RestoreEmailForm";
+import FormInput from "../ui/FormInput";
 
 const signInSchema = Yup.object().shape({
   email: Yup.string()
@@ -28,9 +28,7 @@ class LoginForm extends Component {
   state = {
     email: "",
     password: "",
-    isLogged: false,
-    showModal: false,
-    usersExists: null
+    showModal: false
   };
 
   handleSubmitForm = (values, actions) => {
@@ -70,22 +68,6 @@ class LoginForm extends Component {
   hideModal = () => this.setState({ showModal: false });
 
   render() {
-    if (this.state.isLogged) {
-      return (
-        <Container>
-          <Row>
-            <Col sm={{ span: 6, offset: 3 }} className="mt-5 text-center">
-              <Spinner animation="grow" variant="info" />
-              <Spinner animation="grow" variant="info" />
-              <Spinner animation="grow" variant="info" />
-
-              <p className="text-muted">Preparing Todos...</p>
-            </Col>
-          </Row>
-        </Container>
-      );
-    }
-
     return (
       <>
         <Modal show={this.state.showModal} onHide={this.hideModal}>
@@ -101,10 +83,10 @@ class LoginForm extends Component {
           <Row>
             <Col sm={{ span: 8, offset: 2 }} className="mt-5">
               <Alert variant="warning" className="mb-5 text-center">
-                <p className="lead">To use the Todos you must be authorized</p>
+                <p className="lead">To use the Todo you must be authorized</p>
                 <p className="lead">
                   If you not registered yet, you can follow{" "}
-                  <Link to="/sign-up">Sign Up</Link> and create accound
+                  <Link to="/sign-up">Sign Up</Link> and create account
                 </p>
               </Alert>
             </Col>
@@ -129,43 +111,29 @@ class LoginForm extends Component {
                       touched
                     }) => (
                       <Form noValidate onSubmit={handleSubmit}>
-                        <Form.Group controlId="validationUserEmail">
-                          <Form.Label>Email</Form.Label>
-                          <Form.Control
-                            type="email"
-                            name="email"
-                            value={values.email}
-                            onChange={handleChange}
-                            isInvalid={!!errors.email && touched.email}
-                            isValid={touched.email && !errors.email}
-                            placeholder="your.awesome@gmail.com"
-                          />
-                          <Form.Control.Feedback type="invalid">
-                            {errors.email}
-                          </Form.Control.Feedback>
-                          <Form.Control.Feedback>
-                            Email accepted
-                          </Form.Control.Feedback>
-                        </Form.Group>
+                        <FormInput
+                          id="validate-login-email"
+                          label="Email"
+                          type="email"
+                          name="email"
+                          value={values.email}
+                          onChange={handleChange}
+                          errors={errors}
+                          touched={touched}
+                          placeholder="your.awesome@gmail.com"
+                        />
 
-                        <Form.Group controlId="validationUsername">
-                          <Form.Label>Password</Form.Label>
-                          <Form.Control
-                            type="password"
-                            name="password"
-                            value={values.password}
-                            onChange={handleChange}
-                            isInvalid={!!errors.password && touched.password}
-                            isValid={touched.password && !errors.password}
-                            placeholder="Password"
-                          />
-                          <Form.Control.Feedback type="invalid">
-                            {errors.password}
-                          </Form.Control.Feedback>
-                          <Form.Control.Feedback>
-                            Password accepted
-                          </Form.Control.Feedback>
-                        </Form.Group>
+                        <FormInput
+                          id="validate-login-password"
+                          label="Password"
+                          type="password"
+                          name="password"
+                          value={values.password}
+                          onChange={handleChange}
+                          errors={errors}
+                          touched={touched}
+                          placeholder="Password"
+                        />
 
                         <Button type="submit" variant="info">
                           Log In
