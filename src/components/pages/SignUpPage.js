@@ -31,11 +31,11 @@ class SignUpForm extends Component {
   };
 
   handleSubmitForm = (values, actions) => {
-    const registaredUsers = JSON.parse(localStorage.getItem("users")) || [];
+    const users = JSON.parse(localStorage.getItem("users")) || [];
     const errors = {};
 
-    if (registaredUsers.length > 0) {
-      registaredUsers.find((user) => {
+    if (users.length > 0) {
+      users.find((user) => {
         if (user.username === values.username) {
           errors.username = "Username already exist";
         }
@@ -52,7 +52,7 @@ class SignUpForm extends Component {
       localStorage.setItem(
         "users",
         JSON.stringify([
-          ...registaredUsers,
+          ...users,
           {
             id: uuid(),
             username: values.username,
@@ -62,14 +62,10 @@ class SignUpForm extends Component {
         ])
       );
       actions.resetForm(this.state);
-      this.setState({ showModal: true });
     } else {
       return actions.setErrors(errors);
     }
   };
-
-  hideModal = () => this.setState({ showModal: false });
-
   render() {
     return (
       <Container className="mb-5">

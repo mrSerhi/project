@@ -37,27 +37,21 @@ class LoginForm extends Component {
     const errors = {};
     let currentUser = users.find((user) => user.email === email);
 
-    if (currentUser === undefined) {
-      errors.email =
-        "User not found. Maybe you're not register yet. If you forgot email, try to restore it";
-    }
-
-    if (currentUser !== undefined && currentUser.password !== password) {
-      errors.password = "Wrong password. Type yours account password";
+    if (currentUser === undefined || !Object.keys(currentUser).length) {
+      errors.email = "User is not found...";
+      errors.password = "Password not found";
+    } else {
+      if (currentUser.password !== password) {
+        errors.email = "Try to change email or password";
+        errors.password = "Email or password is invalid...";
+      }
     }
 
     if (!Object.keys(errors).length) {
       // set to localStorage currently logged user
-      localStorage.setItem(
-        "current-user",
-        JSON.stringify({
-          ...currentUser,
-          isLogged: true
-        })
-      );
+      localStorage.setItem("current-user", JSON.stringify(currentUser));
 
       actions.resetForm(this.state);
-      this.setState({ isLogged: true });
       setTimeout(() => this.props.history.push("/"), 1500);
     } else {
       return actions.setErrors(errors);
