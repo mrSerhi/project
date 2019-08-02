@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import PropTypes from "prop-types";
 import {
   Container,
   Row,
@@ -25,17 +26,21 @@ const signInSchema = Yup.object().shape({
 });
 
 class LoginForm extends Component {
+  static propTypes = {
+    setCurrentUser: PropTypes.func.isRequired,
+    users: PropTypes.arrayOf(PropTypes.object).isRequired
+  };
+
   state = {
     email: "",
     password: "",
-    showModal: false
+    restoreEmailModalIn: false
   };
 
   handleSubmitForm = (values, actions) => {
     const { email, password } = values;
-    const users = JSON.parse(localStorage.getItem("users")) || [];
+    const currentUser = this.props.users.find((user) => user.email === email);
     const errors = {};
-    let currentUser = users.find((user) => user.email === email);
 
     if (currentUser === undefined || !Object.keys(currentUser).length) {
       errors.email = "User is not found...";
@@ -48,23 +53,25 @@ class LoginForm extends Component {
     }
 
     if (!Object.keys(errors).length) {
-      // set to localStorage currently logged user
-      localStorage.setItem("current-user", JSON.stringify(currentUser));
-
       actions.resetForm(this.state);
-      setTimeout(() => this.props.history.push("/"), 1500);
+      this.props.setCurrentUser(currentUser);
+      this.props.history.push("/");
     } else {
       return actions.setErrors(errors);
     }
   };
 
-  showModal = () => this.setState({ showModal: true });
-  hideModal = () => this.setState({ showModal: false });
+  toggleRestoreModal = (status = false) => {
+    this.setState({ restoreEmailModalIn: status });
+  };
 
   render() {
-    return (
-      <>
-        <Modal show={this.state.showModal} onHide={this.hideModal}>
+    if (this.state.restoreEmailModalIn) {
+      return (
+        <Modal
+          show={this.state.restoreEmailModalIn}
+          onHide={() => this.toggleRestoreModal(false)}
+        >
           <Modal.Header closeButton>
             <Modal.Title>Restore Email</Modal.Title>
           </Modal.Header>
@@ -72,7 +79,11 @@ class LoginForm extends Component {
             <RestoreEmailForm />
           </Modal.Body>
         </Modal>
+      );
+    }
 
+    return (
+      <>
         <Container className="mb-5">
           <Row>
             <Col sm={{ span: 8, offset: 2 }} className="mt-5">
@@ -133,7 +144,10 @@ class LoginForm extends Component {
                           Log In
                         </Button>
 
-                        <Button variant="link" onClick={this.showModal}>
+                        <Button
+                          variant="link"
+                          onClick={() => this.toggleRestoreModal(true)}
+                        >
                           Forgot email?
                         </Button>
                       </Form>

@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import PropTypes from "prop-types";
 import uuid from "uuid";
 import { Container, Row, Col, Form, Button, Card } from "react-bootstrap";
 import { Formik } from "formik";
@@ -23,6 +24,11 @@ const signUpSchema = Yup.object().shape({
 });
 
 class SignUpForm extends Component {
+  static propTypes = {
+    addNewUser: PropTypes.func.isRequired,
+    users: PropTypes.arrayOf(PropTypes.object).isRequired
+  };
+
   state = {
     username: "",
     email: "",
@@ -31,11 +37,10 @@ class SignUpForm extends Component {
   };
 
   handleSubmitForm = (values, actions) => {
-    const users = JSON.parse(localStorage.getItem("users")) || [];
     const errors = {};
 
-    if (users.length > 0) {
-      users.find((user) => {
+    if (this.props.users.length) {
+      this.props.users.find((user) => {
         if (user.username === values.username) {
           errors.username = "Username already exist";
         }
@@ -49,19 +54,14 @@ class SignUpForm extends Component {
     }
 
     if (!Object.keys(errors).length) {
-      localStorage.setItem(
-        "users",
-        JSON.stringify([
-          ...users,
-          {
-            id: uuid(),
-            username: values.username,
-            email: values.email,
-            password: values.password
-          }
-        ])
-      );
+      this.props.addNewUser({
+        id: uuid(),
+        username: values.username,
+        email: values.email,
+        password: values.password
+      });
       actions.resetForm(this.state);
+      this.props.history.push("/login");
     } else {
       return actions.setErrors(errors);
     }
