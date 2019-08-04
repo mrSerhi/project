@@ -6,25 +6,28 @@ import Navbar from "./ui/Navbar";
 class App extends Component {
   state = { users: [], currentUser: {} };
 
-  setCurrentUser = (currentUser = {}) => this.setState({ currentUser });
-
   addNewUser = (newUser) => {
     this.setState({ users: [...this.state.users, newUser] });
   };
 
+  setCurrentUser = (currentUser = {}) => this.setState({ currentUser });
+
   onLogout = () => this.setState({ currentUser: {} });
 
   componentDidMount() {
-    this.setCurrentUser();
-    this.setState({ users: JSON.parse(localStorage.getItem("users")) || [] });
+    this.setState({
+      users: JSON.parse(localStorage.getItem("users")) || [],
+      currentUser:
+        JSON.parse(localStorage.getItem("current-user")) ||
+        this.setCurrentUser()
+    });
   }
 
   componentDidUpdate() {
-    localStorage.setItem(
-      "current-user",
-      JSON.stringify(this.state.currentUser)
-    );
-    localStorage.setItem("users", JSON.stringify(this.state.users));
+    const { users, currentUser } = this.state;
+
+    localStorage.setItem("users", JSON.stringify(users));
+    localStorage.setItem("current-user", JSON.stringify(currentUser));
   }
 
   render() {

@@ -2,6 +2,8 @@ import React from "react";
 import { Navbar, Container, Nav } from "react-bootstrap";
 import { NavLink } from "react-router-dom";
 import { withRouter } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSignInAlt, faSignOutAlt } from "@fortawesome/free-solid-svg-icons";
 
 const TodoNavbar = ({ currentUser, logout }) => {
   return (
@@ -18,13 +20,13 @@ const TodoNavbar = ({ currentUser, logout }) => {
                 Sign up
               </Nav.Link>
               <Nav.Link as={NavLink} to="/login" activeClassName="active">
-                Log in
+                Log in <FontAwesomeIcon icon={faSignInAlt} />
               </Nav.Link>
             </Nav>
           ) : (
             <Nav className="ml-auto">
               <Nav.Link as={NavLink} to="/login" onClick={logout}>
-                Log out
+                Log out <FontAwesomeIcon icon={faSignOutAlt} />
               </Nav.Link>
             </Nav>
           )}

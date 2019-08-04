@@ -5,6 +5,8 @@ import { Container, Row, Col, Form, Button, Card } from "react-bootstrap";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import FormInput from "../ui/FormInput";
+import { Redirect } from "react-router-dom";
+import { currentUserAuth } from "../../utils/auth";
 
 // validation YUP schema
 const signUpSchema = Yup.object().shape({
@@ -26,7 +28,8 @@ const signUpSchema = Yup.object().shape({
 class SignUpForm extends Component {
   static propTypes = {
     addNewUser: PropTypes.func.isRequired,
-    users: PropTypes.arrayOf(PropTypes.object).isRequired
+    users: PropTypes.arrayOf(PropTypes.object).isRequired,
+    currentUser: PropTypes.object.isRequired
   };
 
   state = {
@@ -38,9 +41,10 @@ class SignUpForm extends Component {
 
   handleSubmitForm = (values, actions) => {
     const errors = {};
+    const { users, addNewUser, history } = this.props;
 
-    if (this.props.users.length) {
-      this.props.users.find((user) => {
+    if (users.length) {
+      users.find((user) => {
         if (user.username === values.username) {
           errors.username = "Username already exist";
         }
@@ -54,19 +58,22 @@ class SignUpForm extends Component {
     }
 
     if (!Object.keys(errors).length) {
-      this.props.addNewUser({
+      addNewUser({
         id: uuid(),
         username: values.username,
         email: values.email,
         password: values.password
       });
       actions.resetForm(this.state);
-      this.props.history.push("/login");
+
+      history.push("/login");
     } else {
       return actions.setErrors(errors);
     }
   };
   render() {
+    // if user is auth than redirect on root path
+    if (currentUserAuth(this.props.currentUser)) return <Redirect to="/" />;
     return (
       <Container className="mb-5">
         <Row>

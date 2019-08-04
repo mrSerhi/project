@@ -15,6 +15,8 @@ import * as Yup from "yup";
 import { Link } from "react-router-dom";
 import RestoreEmailForm from "../todo/RestoreEmailForm";
 import FormInput from "../ui/FormInput";
+import { Redirect } from "react-router-dom";
+import { currentUserAuth } from "../../utils/auth";
 
 const signInSchema = Yup.object().shape({
   email: Yup.string()
@@ -28,7 +30,8 @@ const signInSchema = Yup.object().shape({
 class LoginForm extends Component {
   static propTypes = {
     setCurrentUser: PropTypes.func.isRequired,
-    users: PropTypes.arrayOf(PropTypes.object).isRequired
+    users: PropTypes.arrayOf(PropTypes.object).isRequired,
+    currentUser: PropTypes.object.isRequired
   };
 
   state = {
@@ -44,7 +47,7 @@ class LoginForm extends Component {
 
     if (currentUser === undefined || !Object.keys(currentUser).length) {
       errors.email = "User is not found...";
-      errors.password = "Password not found";
+      errors.password = "Password is not found";
     } else {
       if (currentUser.password !== password) {
         errors.email = "Try to change email or password";
@@ -54,7 +57,9 @@ class LoginForm extends Component {
 
     if (!Object.keys(errors).length) {
       actions.resetForm(this.state);
+      localStorage.setItem("current-user", JSON.stringify(currentUser));
       this.props.setCurrentUser(currentUser);
+
       this.props.history.push("/");
     } else {
       return actions.setErrors(errors);
@@ -66,6 +71,9 @@ class LoginForm extends Component {
   };
 
   render() {
+    // if user is auth than redirect on root path
+    if (currentUserAuth(this.props.currentUser)) return <Redirect to="/" />;
+
     if (this.state.restoreEmailModalIn) {
       return (
         <Modal
@@ -83,82 +91,80 @@ class LoginForm extends Component {
     }
 
     return (
-      <>
-        <Container className="mb-5">
-          <Row>
-            <Col sm={{ span: 8, offset: 2 }} className="mt-5">
-              <Alert variant="warning" className="mb-5 text-center">
-                <p className="lead">To use the Todo you must be authorized</p>
-                <p className="lead">
-                  If you not registered yet, you can follow{" "}
-                  <Link to="/sign-up">Sign Up</Link> and create account
-                </p>
-              </Alert>
-            </Col>
-          </Row>
+      <Container className="mb-5">
+        <Row>
+          <Col sm={{ span: 8, offset: 2 }} className="mt-5">
+            <Alert variant="warning" className="mb-5 text-center">
+              <p className="lead">To use the Todo you must be authorized</p>
+              <p className="lead">
+                If you not registered yet, you can follow{" "}
+                <Link to="/sign-up">Sign Up</Link> and create account
+              </p>
+            </Alert>
+          </Col>
+        </Row>
 
-          <Row>
-            <Col sm={{ span: 6, offset: 3 }} className="mt-2">
-              <Card>
-                <Card.Body>
-                  <h3 className="display-4 text-center">Log In</h3>
+        <Row>
+          <Col sm={{ span: 6, offset: 3 }} className="mt-2">
+            <Card>
+              <Card.Body>
+                <h3 className="display-4 text-center">Log In</h3>
 
-                  <Formik
-                    initialValues={this.state}
-                    onSubmit={this.handleSubmitForm}
-                    validationSchema={signInSchema}
-                  >
-                    {({
-                      handleSubmit,
-                      handleChange,
-                      values,
-                      errors,
-                      touched
-                    }) => (
-                      <Form noValidate onSubmit={handleSubmit}>
-                        <FormInput
-                          id="validate-login-email"
-                          label="Email"
-                          type="email"
-                          name="email"
-                          value={values.email}
-                          onChange={handleChange}
-                          errors={errors}
-                          touched={touched}
-                          placeholder="your.awesome@gmail.com"
-                        />
+                <Formik
+                  initialValues={this.state}
+                  onSubmit={this.handleSubmitForm}
+                  validationSchema={signInSchema}
+                >
+                  {({
+                    handleSubmit,
+                    handleChange,
+                    values,
+                    errors,
+                    touched
+                  }) => (
+                    <Form noValidate onSubmit={handleSubmit}>
+                      <FormInput
+                        id="validate-login-email"
+                        label="Email"
+                        type="email"
+                        name="email"
+                        value={values.email}
+                        onChange={handleChange}
+                        errors={errors}
+                        touched={touched}
+                        placeholder="your.awesome@gmail.com"
+                      />
 
-                        <FormInput
-                          id="validate-login-password"
-                          label="Password"
-                          type="password"
-                          name="password"
-                          value={values.password}
-                          onChange={handleChange}
-                          errors={errors}
-                          touched={touched}
-                          placeholder="Password"
-                        />
+                      <FormInput
+                        id="validate-login-password"
+                        label="Password"
+                        type="password"
+                        name="password"
+                        value={values.password}
+                        onChange={handleChange}
+                        errors={errors}
+                        touched={touched}
+                        placeholder="Password"
+                      />
 
-                        <Button type="submit" variant="info">
-                          Log In
-                        </Button>
+                      <Button type="submit" variant="info">
+                        Log In
+                      </Button>
 
-                        <Button
-                          variant="link"
-                          onClick={() => this.toggleRestoreModal(true)}
-                        >
-                          Forgot email?
-                        </Button>
-                      </Form>
-                    )}
-                  </Formik>
-                </Card.Body>
-              </Card>
-            </Col>
-          </Row>
-        </Container>
-      </>
+                      <Button
+                        variant="link"
+                        onClick={() => this.toggleRestoreModal(true)}
+                      >
+                        Forgot email?
+                      </Button>
+                    </Form>
+                  )}
+                </Formik>
+              </Card.Body>
+            </Card>
+          </Col>
+        </Row>
+      </Container>
     );
   }
 }
