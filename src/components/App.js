@@ -27,7 +27,7 @@ class App extends Component {
     const { users, currentUser } = this.state;
 
     localStorage.setItem("users", JSON.stringify(users));
-    localStorage.setItem("current-user", JSON.stringify(currentUser));
+    localStorage.setItem("current-user", JSON.stringify(currentUser || {}));
   }
 
   render() {

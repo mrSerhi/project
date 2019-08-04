@@ -8,6 +8,7 @@ import {
   faSignOutAlt,
   faListAlt
 } from "@fortawesome/free-solid-svg-icons";
+import { currentUserAuth } from "../../utils/auth";
 
 const TodoNavbar = ({ currentUser, logout }) => {
   return (
@@ -18,7 +19,7 @@ const TodoNavbar = ({ currentUser, logout }) => {
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="todo-navbar-nav" />
         <Navbar.Collapse id="todo-navbar-nav">
-          {!currentUser.id ? (
+          {!currentUserAuth(currentUser) ? (
             <Nav className="ml-auto">
               <Nav.Link as={NavLink} to="/sign-up" activeClassName="active">
                 Sign up
