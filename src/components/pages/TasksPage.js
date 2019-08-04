@@ -2,14 +2,14 @@ import React, { Component } from "react";
 import { Container, Row, Col } from "react-bootstrap";
 
 // components
-import AddTaskForm from "../todo/AddTaskForm";
-import TasksList from "../todo/TasksList/TasksList";
-import SortTasksBlock from "../todo/SortTasksBlock";
-import Pagination from "../todo/Pagination";
-import SearchTaskForm from "../todo/SearchTaskForm";
+import AddTaskForm from "../tasks/AddTaskForm";
+import TasksList from "../tasks/TasksList/TasksList";
+import SortTasksBlock from "../tasks/SortTasksBlock";
+import Pagination from "../tasks/Pagination";
+import SearchTaskForm from "../tasks/SearchTaskForm";
 import TasksRemoveModal from "../modals/TasksRemoveModal";
 
-class Todo extends Component {
+class Tasks extends Component {
   state = {
     tasks: [],
     searchQuery: "",
@@ -160,4 +160,4 @@ class Todo extends Component {
   }
 }
 
-export default Todo;
+export default Tasks;

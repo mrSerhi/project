@@ -15,7 +15,7 @@ import { faPaperPlane } from "@fortawesome/free-solid-svg-icons";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import { Link } from "react-router-dom";
-import RestoreEmailForm from "../todo/RestoreEmailForm";
+import RestoreEmailForm from "../tasks/RestoreEmailForm";
 import FormInput from "../ui/FormInput";
 import { Redirect } from "react-router-dom";
 import { currentUserAuth } from "../../utils/auth";

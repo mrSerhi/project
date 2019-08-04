@@ -3,7 +3,7 @@ import { Route, Switch } from "react-router-dom";
 import { currentUserAuth } from "../utils/auth";
 
 // components
-import Todo from "./pages/TodoPage";
+import Tasks from "./pages/TasksPage";
 import LoginPage from "./pages/LoginPage";
 import SignUpPage from "./pages/SignUpPage";
 import PrivateRoute from "./hoc/PrivateRoute";
@@ -15,7 +15,7 @@ const Navigation = ({ currentUser, setCurrentUser, users, addNewUser }) => {
         exact
         path="/"
         auth={currentUserAuth(currentUser)}
-        component={Todo}
+        component={Tasks}
       />
 
       <Route
