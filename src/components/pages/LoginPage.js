@@ -10,6 +10,8 @@ import {
   Alert,
   Modal
 } from "react-bootstrap";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPaperPlane } from "@fortawesome/free-solid-svg-icons";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import { Link } from "react-router-dom";
@@ -148,7 +150,7 @@ class LoginForm extends Component {
                       />
 
                       <Button type="submit" variant="info">
-                        Log In
+                        Log In <FontAwesomeIcon icon={faPaperPlane} />
                       </Button>
 
                       <Button

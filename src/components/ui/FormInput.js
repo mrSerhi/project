@@ -5,7 +5,7 @@ import PropTypes from "prop-types";
 const FormInput = ({ id, label = null, errors, touched, ...props }) => {
   return (
     <Form.Group controlId={id}>
-      <Form.Label>{label}</Form.Label>
+      {label && <Form.Label>{label}</Form.Label>}
       <Form.Control
         {...props}
         isInvalid={!!errors[props.name] && touched[props.name]}
@@ -14,7 +14,9 @@ const FormInput = ({ id, label = null, errors, touched, ...props }) => {
       <Form.Control.Feedback type="invalid">
         {errors[props.name]}
       </Form.Control.Feedback>
-      <Form.Control.Feedback>{label} accepted</Form.Control.Feedback>
+      <Form.Control.Feedback>
+        {props.name.toUpperCase()} accepted
+      </Form.Control.Feedback>
     </Form.Group>
   );
 };

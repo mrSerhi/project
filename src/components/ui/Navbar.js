@@ -3,14 +3,18 @@ import { Navbar, Container, Nav } from "react-bootstrap";
 import { NavLink } from "react-router-dom";
 import { withRouter } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSignInAlt, faSignOutAlt } from "@fortawesome/free-solid-svg-icons";
+import {
+  faSignInAlt,
+  faSignOutAlt,
+  faListAlt
+} from "@fortawesome/free-solid-svg-icons";
 
 const TodoNavbar = ({ currentUser, logout }) => {
   return (
     <Navbar bg="info" variant="dark" expand="lg">
       <Container>
         <Navbar.Brand as={NavLink} to="/">
-          Todo
+          Todo <FontAwesomeIcon icon={faListAlt} size="lg" />
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="todo-navbar-nav" />
         <Navbar.Collapse id="todo-navbar-nav">
