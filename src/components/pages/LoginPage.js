@@ -70,24 +70,24 @@ class LoginForm extends Component {
   };
 
   render() {
-    if (this.state.restoreEmailModalIn) {
-      return (
-        <Modal
-          show={this.state.restoreEmailModalIn}
-          onHide={() => this.toggleRestoreModal(false)}
-        >
-          <Modal.Header closeButton>
-            <Modal.Title>Restore Email</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            <RestoreEmailForm />
-          </Modal.Body>
-        </Modal>
-      );
-    }
-
+    const { restoreEmailModalIn } = this.state;
+    const { users } = this.props;
     return (
       <Container className="mb-5">
+        {restoreEmailModalIn && (
+          <Modal
+            show={restoreEmailModalIn}
+            onHide={() => this.toggleRestoreModal(false)}
+          >
+            <Modal.Header closeButton>
+              <Modal.Title>Restore Email</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <RestoreEmailForm users={users} />
+            </Modal.Body>
+          </Modal>
+        )}
+
         <Row>
           <Col sm={{ span: 8, offset: 2 }} className="mt-5">
             <Alert variant="warning" className="mb-5 text-center">

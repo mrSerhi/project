@@ -14,13 +14,13 @@ const restoreEmailSchema = Yup.object().shape({
 class RestoreEmailForm extends Component {
   state = {
     username: "",
-    password: "",
     sendVerification: false
   };
 
   handleSubmitForm = (values, actions) => {
-    const users = JSON.parse(localStorage.getItem("users"));
-    const user = users.find((user) => user.username === values.username);
+    const user = this.props.users.find(
+      (user) => user.username === values.username
+    );
     const errors = {};
 
     if (user === undefined) {
@@ -36,14 +36,16 @@ class RestoreEmailForm extends Component {
   };
 
   render() {
+    const { sendVerification } = this.state;
     return (
       <Container>
         <Row>
           <Col>
             <Alert variant="warning" className="mb-2">
-              <p className="lead text-center">
-                For restoring email you should enter yours currently{" "}
-                <span className="text-danger">Username</span> and{" "}
+              <p className="text-center">
+                Enter your currently{" "}
+                <span className="text-danger">Username</span> and we will send
+                recovery instructions to your email
               </p>
             </Alert>
 
@@ -67,13 +69,21 @@ class RestoreEmailForm extends Component {
                   />
 
                   <Button type="submit" variant="info">
-                    Restore
+                    Send
                   </Button>
                 </Form>
               )}
             </Formik>
           </Col>
         </Row>
+
+        {sendVerification && (
+          <Alert variant="success" className="mt-3">
+            <p className="text-center">
+              Instructions sent successfully. Check you email...
+            </p>
+          </Alert>
+        )}
       </Container>
     );
   }
