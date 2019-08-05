@@ -17,16 +17,14 @@ class App extends Component {
   componentDidMount() {
     this.setState({
       users: JSON.parse(localStorage.getItem("users")) || [],
-      currentUser:
-        JSON.parse(localStorage.getItem("current-user")) ||
-        this.setCurrentUser()
+      currentUser: JSON.parse(localStorage.getItem("current-user")) || {}
     });
   }
 
   componentDidUpdate() {
     const { users, currentUser } = this.state;
 
-    localStorage.setItem("users", JSON.stringify(users));
+    localStorage.setItem("users", JSON.stringify(users || []));
     localStorage.setItem("current-user", JSON.stringify(currentUser || {}));
   }
 

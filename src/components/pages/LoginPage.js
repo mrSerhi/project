@@ -17,8 +17,6 @@ import * as Yup from "yup";
 import { Link } from "react-router-dom";
 import RestoreEmailForm from "../tasks/RestoreEmailForm";
 import FormInput from "../ui/FormInput";
-import { Redirect } from "react-router-dom";
-import { currentUserAuth } from "../../utils/auth";
 
 const signInSchema = Yup.object().shape({
   email: Yup.string()
@@ -32,8 +30,7 @@ const signInSchema = Yup.object().shape({
 class LoginForm extends Component {
   static propTypes = {
     setCurrentUser: PropTypes.func.isRequired,
-    users: PropTypes.arrayOf(PropTypes.object).isRequired,
-    currentUser: PropTypes.object.isRequired
+    users: PropTypes.arrayOf(PropTypes.object).isRequired
   };
 
   state = {
@@ -73,9 +70,6 @@ class LoginForm extends Component {
   };
 
   render() {
-    // if user is auth than redirect on root path
-    if (currentUserAuth(this.props.currentUser)) return <Redirect to="/" />;
-
     if (this.state.restoreEmailModalIn) {
       return (
         <Modal
@@ -97,7 +91,7 @@ class LoginForm extends Component {
         <Row>
           <Col sm={{ span: 8, offset: 2 }} className="mt-5">
             <Alert variant="warning" className="mb-5 text-center">
-              <p className="lead">To use the Todo you must be authorized</p>
+              <p className="lead">To use the Tasks you must be authorized</p>
               <p className="lead">
                 If you not registered yet, you can follow{" "}
                 <Link to="/sign-up">Sign Up</Link> and create account

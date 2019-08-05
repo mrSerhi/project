@@ -7,8 +7,6 @@ import { faPaperPlane } from "@fortawesome/free-solid-svg-icons";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import FormInput from "../ui/FormInput";
-import { Redirect } from "react-router-dom";
-import { currentUserAuth } from "../../utils/auth";
 
 // validation YUP schema
 const signUpSchema = Yup.object().shape({
@@ -30,8 +28,7 @@ const signUpSchema = Yup.object().shape({
 class SignUpForm extends Component {
   static propTypes = {
     addNewUser: PropTypes.func.isRequired,
-    users: PropTypes.arrayOf(PropTypes.object).isRequired,
-    currentUser: PropTypes.object.isRequired
+    users: PropTypes.arrayOf(PropTypes.object).isRequired
   };
 
   state = {
@@ -74,8 +71,6 @@ class SignUpForm extends Component {
     }
   };
   render() {
-    // if user is auth than redirect on root path
-    if (currentUserAuth(this.props.currentUser)) return <Redirect to="/" />;
     return (
       <Container className="mb-5">
         <Row>

@@ -15,7 +15,7 @@ const TodoNavbar = ({ currentUser, logout }) => {
     <Navbar bg="info" variant="dark" expand="lg">
       <Container>
         <Navbar.Brand as={NavLink} to="/">
-          Todo <FontAwesomeIcon icon={faListAlt} size="lg" />
+          Tasks <FontAwesomeIcon icon={faListAlt} size="lg" />
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="todo-navbar-nav" />
         <Navbar.Collapse id="todo-navbar-nav">

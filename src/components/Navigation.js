@@ -1,6 +1,5 @@
 import React from "react";
-import { Route, Switch } from "react-router-dom";
-import { currentUserAuth } from "../utils/auth";
+import { Route, Switch, Redirect } from "react-router-dom";
 
 // components
 import Tasks from "./pages/TasksPage";
@@ -11,37 +10,30 @@ import PrivateRoute from "./hoc/PrivateRoute";
 const Navigation = ({ currentUser, setCurrentUser, users, addNewUser }) => {
   return (
     <Switch>
-      <PrivateRoute
-        exact
-        path="/"
-        auth={currentUserAuth(currentUser)}
-        component={Tasks}
-      />
-
-      <Route
-        path="/login"
-        render={(props) => (
-          <LoginPage
-            currentUser={currentUser}
-            setCurrentUser={setCurrentUser}
-            users={users}
-            {...props}
+      <PrivateRoute exact path="/" authUser={currentUser} component={Tasks} />
+      {!currentUser.id ? (
+        <>
+          <Route
+            path="/login"
+            render={(props) => (
+              <LoginPage
+                setCurrentUser={setCurrentUser}
+                users={users}
+                {...props}
+              />
+            )}
           />
-        )}
-      />
 
-      <Route
-        path="/sign-up"
-        render={(props) => (
-          <SignUpPage
-            addNewUser={addNewUser}
-            currentUser={currentUser}
-            users={users}
-            {...props}
+          <Route
+            path="/sign-up"
+            render={(props) => (
+              <SignUpPage addNewUser={addNewUser} users={users} {...props} />
+            )}
           />
-        )}
-      />
-
+        </>
+      ) : (
+        <Redirect to="/" />
+      )}
       <Route render={() => <h1>Page is not found...</h1>} />
     </Switch>
   );
