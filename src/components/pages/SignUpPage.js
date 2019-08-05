@@ -1,16 +1,12 @@
 import React, { Component } from "react";
+import PropTypes from "prop-types";
 import uuid from "uuid";
-import {
-  Container,
-  Row,
-  Col,
-  Form,
-  Button,
-  Card,
-  Modal
-} from "react-bootstrap";
+import { Container, Row, Col, Form, Button, Card } from "react-bootstrap";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPaperPlane } from "@fortawesome/free-solid-svg-icons";
 import { Formik } from "formik";
 import * as Yup from "yup";
+import FormInput from "../ui/FormInput";
 
 // validation YUP schema
 const signUpSchema = Yup.object().shape({
@@ -30,20 +26,24 @@ const signUpSchema = Yup.object().shape({
 });
 
 class SignUpForm extends Component {
+  static propTypes = {
+    addNewUser: PropTypes.func.isRequired,
+    users: PropTypes.arrayOf(PropTypes.object).isRequired
+  };
+
   state = {
     username: "",
     email: "",
     password: "",
-    confirmPassword: "",
-    showModal: false
+    confirmPassword: ""
   };
 
   handleSubmitForm = (values, actions) => {
-    const registaredUsers = JSON.parse(localStorage.getItem("users")) || [];
     const errors = {};
+    const { users, addNewUser, history } = this.props;
 
-    if (registaredUsers.length > 0) {
-      registaredUsers.find((user) => {
+    if (users.length) {
+      users.find((user) => {
         if (user.username === values.username) {
           errors.username = "Username already exist";
         }
@@ -57,165 +57,99 @@ class SignUpForm extends Component {
     }
 
     if (!Object.keys(errors).length) {
-      localStorage.setItem(
-        "users",
-        JSON.stringify([
-          ...registaredUsers,
-          {
-            id: uuid(),
-            username: values.username,
-            email: values.email,
-            password: values.password
-          }
-        ])
-      );
+      addNewUser({
+        id: uuid(),
+        username: values.username,
+        email: values.email,
+        password: values.password
+      });
       actions.resetForm(this.state);
-      this.setState({ showModal: true });
+
+      history.push("/login");
     } else {
       return actions.setErrors(errors);
     }
   };
-
-  hideModal = () => this.setState({ showModal: false });
-
   render() {
     return (
-      <>
-        <Modal show={this.state.showModal} onHide={this.hideModal}>
-          <Modal.Body className="text-center">
-            <h4 className="text-success">Registration is successfuly done!</h4>
-            <p>Want to go to the login page?</p>
+      <Container className="mb-5">
+        <Row>
+          <Col sm={{ span: 6, offset: 3 }} className="mt-5">
+            <Card>
+              <Card.Body>
+                <h3 className="display-4 text-center">Sign Up</h3>
+                <Formik
+                  initialValues={this.state}
+                  validationSchema={signUpSchema}
+                  onSubmit={this.handleSubmitForm}
+                >
+                  {({
+                    handleSubmit,
+                    handleChange,
+                    values,
+                    errors,
+                    touched
+                  }) => (
+                    <Form noValidate onSubmit={handleSubmit}>
+                      <FormInput
+                        id="validate-signup-username"
+                        label="Username"
+                        type="text"
+                        name="username"
+                        value={values.username}
+                        onChange={handleChange}
+                        errors={errors}
+                        touched={touched}
+                        placeholder="Type account username"
+                      />
 
-            <Modal.Footer>
-              <Button
-                onClick={() => this.props.history.push("/login")}
-                variant="info"
-              >
-                Log in
-              </Button>
-              <Button onClick={this.hideModal} variant="danger">
-                Stay here
-              </Button>
-            </Modal.Footer>
-          </Modal.Body>
-        </Modal>
+                      <FormInput
+                        id="validate-signup-email"
+                        label="Email"
+                        type="email"
+                        name="email"
+                        value={values.email}
+                        onChange={handleChange}
+                        errors={errors}
+                        touched={touched}
+                        placeholder="Type account email"
+                      />
 
-        <Container className="mb-5">
-          <Row>
-            <Col sm={{ span: 6, offset: 3 }} className="mt-5">
-              <Card>
-                <Card.Body>
-                  <h3 className="display-4 text-center">Sign Up</h3>
-                  <Formik
-                    initialValues={this.state}
-                    validationSchema={signUpSchema}
-                    onSubmit={this.handleSubmitForm}
-                  >
-                    {({
-                      handleSubmit,
-                      handleChange,
-                      values,
-                      errors,
-                      touched
-                    }) => (
-                      <Form noValidate onSubmit={handleSubmit}>
-                        <Form.Group controlId="validationUserName">
-                          <Form.Label>Username</Form.Label>
-                          <Form.Control
-                            type="text"
-                            name="username"
-                            value={values.username}
-                            onChange={handleChange}
-                            isInvalid={!!errors.username && touched.username}
-                            isValid={touched.username && !errors.username}
-                            placeholder="Choose a username"
-                          />
-                          <Form.Control.Feedback type="invalid">
-                            {errors.username}
-                          </Form.Control.Feedback>
+                      <FormInput
+                        id="validate-signup-password"
+                        label="Password"
+                        type="password"
+                        name="password"
+                        value={values.password}
+                        onChange={handleChange}
+                        errors={errors}
+                        touched={touched}
+                        placeholder="Type account password"
+                      />
 
-                          <Form.Control.Feedback>
-                            Username accepted
-                          </Form.Control.Feedback>
-                        </Form.Group>
+                      <FormInput
+                        id="validate-signup-confirm-password"
+                        label="Confirm password"
+                        type="password"
+                        name="confirmPassword"
+                        value={values.confirmPassword}
+                        onChange={handleChange}
+                        errors={errors}
+                        touched={touched}
+                        placeholder="Confirm password"
+                      />
 
-                        <Form.Group controlId="validationUserEmail">
-                          <Form.Label>Email</Form.Label>
-                          <Form.Control
-                            type="text"
-                            name="email"
-                            value={values.email}
-                            onChange={handleChange}
-                            isInvalid={!!errors.email && touched.email}
-                            isValid={touched.email && !errors.email}
-                            placeholder="Choose a email address"
-                          />
-                          <Form.Control.Feedback type="invalid">
-                            {errors.email}
-                          </Form.Control.Feedback>
-
-                          <Form.Control.Feedback>
-                            Email accepted
-                          </Form.Control.Feedback>
-                        </Form.Group>
-
-                        <Form.Group controlId="validationUserPassword">
-                          <Form.Label>Password</Form.Label>
-                          <Form.Control
-                            type="password"
-                            name="password"
-                            value={values.password}
-                            onChange={handleChange}
-                            isInvalid={!!errors.password && touched.password}
-                            isValid={touched.password && !errors.password}
-                            placeholder="Type a password"
-                          />
-                          <Form.Control.Feedback type="invalid">
-                            {errors.password}
-                          </Form.Control.Feedback>
-
-                          <Form.Control.Feedback>
-                            Password accepted
-                          </Form.Control.Feedback>
-                        </Form.Group>
-
-                        <Form.Group controlId="validationUserConfirmPassword">
-                          <Form.Label>Сonfirm Password</Form.Label>
-                          <Form.Control
-                            type="password"
-                            name="confirmPassword"
-                            value={values.confirmPassword}
-                            onChange={handleChange}
-                            isInvalid={
-                              !!errors.confirmPassword &&
-                              touched.confirmPassword
-                            }
-                            isValid={
-                              touched.confirmPassword && !errors.confirmPassword
-                            }
-                            placeholder="Сonfirm Password"
-                          />
-                          <Form.Control.Feedback type="invalid">
-                            {errors.confirmPassword}
-                          </Form.Control.Feedback>
-
-                          <Form.Control.Feedback>
-                            Confirm password accepted
-                          </Form.Control.Feedback>
-                        </Form.Group>
-
-                        <Button type="submit" variant="info">
-                          Sign Up
-                        </Button>
-                      </Form>
-                    )}
-                  </Formik>
-                </Card.Body>
-              </Card>
-            </Col>
-          </Row>
-        </Container>
-      </>
+                      <Button type="submit" variant="info">
+                        Sign Up <FontAwesomeIcon icon={faPaperPlane} />
+                      </Button>
+                    </Form>
+                  )}
+                </Formik>
+              </Card.Body>
+            </Card>
+          </Col>
+        </Row>
+      </Container>
     );
   }
 }
