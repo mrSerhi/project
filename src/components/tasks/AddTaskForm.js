@@ -1,33 +1,28 @@
 import React, { useState } from "react";
-import uuid from "uuid";
 import PropTypes from "prop-types";
 import { Form, InputGroup, FormControl, Button } from "react-bootstrap";
+import { connect } from "react-redux";
+import { addTaskAndSave } from "../../store/task/task-actions";
 
-const AddTaskForm = ({ handleAddTask }) => {
+const AddTaskForm = ({ addTaskAndSave }) => {
   const [title, setTitle] = useState("");
   const addTaskOnSubmit = (e) => {
     e.preventDefault();
 
-    if (title.trim() === "") return;
+    if (title.trim() === "") {
+      return false;
+    }
 
-    const newTask = {
-      id: uuid(),
-      title,
-      done: false
-    };
-
-    handleAddTask(newTask);
-
+    addTaskAndSave({ title });
     // clear search field
     setTitle("");
   };
-  const changeTitleOnChange = (e) => setTitle(e.currentTarget.value);
   return (
     <Form onSubmit={addTaskOnSubmit}>
       <InputGroup size="lg" className="mb-2">
         <FormControl
           placeholder="What needs to be done?"
-          onChange={changeTitleOnChange}
+          onChange={(e) => setTitle(e.currentTarget.value)}
           value={title}
         />
 
@@ -42,7 +37,10 @@ const AddTaskForm = ({ handleAddTask }) => {
 };
 
 AddTaskForm.propTypes = {
-  handleAddTask: PropTypes.func.isRequired
+  addTask: PropTypes.func.isRequired
 };
 
-export default AddTaskForm;
+export default connect(
+  null,
+  { addTaskAndSave }
+)(AddTaskForm);

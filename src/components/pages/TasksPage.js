@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 import { Container, Row, Col } from "react-bootstrap";
+import { connect } from "react-redux";
+import * as taskActions from "../../store/task/task-actions";
 
 // components
 import AddTaskForm from "../tasks/AddTaskForm";
@@ -23,26 +25,10 @@ class Tasks extends Component {
     this.setState({ tasksRemoveModalIn: status });
   };
 
-  addTask = (task) => {
-    this.setState({ tasks: [...this.state.tasks, task] });
-  };
-
-  onRemoveTask = (id) => {
-    this.setState({ tasks: this.state.tasks.filter((task) => task.id !== id) });
-  };
-
   removeCompletedTasks = () => {
+    this.props.clearCompletedTasks();
     this.setState({
-      tasks: this.state.tasks.filter((task) => !task.done),
       tasksRemoveModalIn: false
-    });
-  };
-
-  onToggleTaskDone = (id) => {
-    this.setState({
-      tasks: this.state.tasks.map((task) =>
-        task.id !== id ? task : { ...task, done: !task.done }
-      )
     });
   };
 
@@ -80,14 +66,11 @@ class Tasks extends Component {
   onPaginateChangeCurrentPage = (page) => this.setState({ currentPage: page });
 
   componentDidMount() {
-    // at first saving to state from localStorage
-    this.setState({
-      tasks: JSON.parse(localStorage.getItem("tasks")) || []
-    });
+    this.props.getAllTasks();
   }
 
   componentDidUpdate(prevProps, prevState) {
-    localStorage.setItem("tasks", JSON.stringify(this.state.tasks));
+    // localStorage.setItem("tasks", JSON.stringify(this.props.tasks));
 
     // pagination
     // returns back if currentPage number is biggest than number of all pages
@@ -102,13 +85,14 @@ class Tasks extends Component {
 
   render() {
     const {
-      tasks,
+      // tasks,
       itemsFilter,
       searchQuery,
       currentPage,
       tasksLimit,
       tasksRemoveModalIn
     } = this.state;
+    const { tasks } = this.props;
     const filteredTasks = this.getFilteredTasks(
       tasks,
       itemsFilter,
@@ -139,12 +123,10 @@ class Tasks extends Component {
 
         <Row>
           <Col md={{ span: 6, offset: 3 }} className="d-flex flex-column mt-2">
-            <AddTaskForm tasks={tasks} handleAddTask={this.addTask} />
+            <AddTaskForm />
 
             <TasksList
               tasks={this.paginateTasks(filteredTasks, currentPage, tasksLimit)}
-              removeTask={this.onRemoveTask}
-              toggleTaskDone={this.onToggleTaskDone}
             />
 
             <Pagination
@@ -160,4 +142,9 @@ class Tasks extends Component {
   }
 }
 
-export default Tasks;
+const mapStateToProps = (state) => ({ tasks: state.tasks });
+
+export default connect(
+  mapStateToProps,
+  { ...taskActions }
+)(Tasks);

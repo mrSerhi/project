@@ -4,8 +4,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrashAlt, faBoxOpen } from "@fortawesome/free-solid-svg-icons";
 import classnames from "classnames";
 import "./TasksList.css";
+import { connect } from "react-redux";
+import * as taskActions from "../../../store/task/task-actions";
 
-const TasksList = ({ tasks, removeTask, toggleTaskDone }) => {
+const TasksList = ({ tasks, updateTaskAndSave, removeTask }) => {
   return (
     <Card style={{ height: "340px" }}>
       <Card.Body>
@@ -14,7 +16,7 @@ const TasksList = ({ tasks, removeTask, toggleTaskDone }) => {
             {tasks.map((task) => (
               <ListGroup.Item key={task.id} className="task-group-item">
                 <div
-                  onClick={() => toggleTaskDone(task.id)}
+                  onClick={() => updateTaskAndSave(task.id)}
                   className={classnames("task-item", {
                     "task-done": task.done
                   })}
@@ -44,4 +46,7 @@ const TasksList = ({ tasks, removeTask, toggleTaskDone }) => {
   );
 };
 
-export default TasksList;
+export default connect(
+  null,
+  { ...taskActions }
+)(TasksList);
