@@ -37,7 +37,7 @@ const AddTaskForm = ({ addTaskAndSave }) => {
 };
 
 AddTaskForm.propTypes = {
-  addTask: PropTypes.func.isRequired
+  addTaskAndSave: PropTypes.func.isRequired
 };
 
 export default connect(

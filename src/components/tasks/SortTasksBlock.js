@@ -4,6 +4,14 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 import PropTypes from "prop-types";
 import classnames from "classnames";
+import { connect } from "react-redux";
+import { setTaskFilter } from "../../store/task/task-actions";
+
+const visibilityFilters = {
+  SHOW_ALL: "SHOW_ALL",
+  SHOW_ACTIVE: "SHOW_ACTIVE",
+  SHOW_COMPLETED: "SHOW_COMPLETED"
+};
 
 const SortTasksBlock = ({
   setTaskFilter,
@@ -35,7 +43,7 @@ const SortTasksBlock = ({
           <Col className="d-flex justify-content-around align-items-center">
             <ButtonGroup size="sm">
               <Button
-                onClick={() => setTaskFilter("all")}
+                onClick={() => setTaskFilter(visibilityFilters.SHOW_ALL)}
                 variant="outline-light"
                 className={classnames({
                   active: itemsFilter === "all"
@@ -44,7 +52,7 @@ const SortTasksBlock = ({
                 All
               </Button>
               <Button
-                onClick={() => setTaskFilter("active")}
+                onClick={() => setTaskFilter(visibilityFilters.SHOW_ACTIVE)}
                 variant="outline-light"
                 className={classnames({
                   active: itemsFilter === "active"
@@ -53,7 +61,7 @@ const SortTasksBlock = ({
                 Active
               </Button>
               <Button
-                onClick={() => setTaskFilter("done")}
+                onClick={() => setTaskFilter(visibilityFilters.SHOW_COMPLETED)}
                 variant="outline-light"
                 className={classnames({
                   active: itemsFilter === "done"
@@ -69,10 +77,13 @@ const SortTasksBlock = ({
   );
 };
 
-SortTasksBlock.propTypes = {
-  setTaskFilter: PropTypes.func.isRequired,
-  itemsFilter: PropTypes.string.isRequired,
-  tasks: PropTypes.arrayOf(PropTypes.object)
-};
+// SortTasksBlock.propTypes = {
+//   setTaskFilter: PropTypes.func.isRequired,
+//   itemsFilter: PropTypes.string.isRequired,
+//   tasks: PropTypes.arrayOf(PropTypes.object)
+// };
 
-export default SortTasksBlock;
+export default connect(
+  null,
+  { setTaskFilter }
+)(SortTasksBlock);

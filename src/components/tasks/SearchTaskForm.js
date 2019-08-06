@@ -1,8 +1,10 @@
 import React from "react";
 import { Col, InputGroup, FormControl, Card, Row } from "react-bootstrap";
 import PropTypes from "prop-types";
+import { connect } from "react-redux";
+import { getSearchTerm } from "../../store/task/task-actions";
 
-const SearchTaskForm = ({ setSearchQuery }) => {
+const SearchTaskForm = ({ setSearchQuery, getSearchTerm }) => {
   return (
     <Card bg="info" text="light" className="mb-3">
       <Card.Body>
@@ -13,7 +15,7 @@ const SearchTaskForm = ({ setSearchQuery }) => {
               <FormControl
                 type="search"
                 placeholder="Enter Searching task title..."
-                onChange={(e) => setSearchQuery(e.target.value)}
+                onChange={(e) => getSearchTerm(e.target.value)}
               />
             </InputGroup>
           </Col>
@@ -27,4 +29,7 @@ SearchTaskForm.propTypes = {
   setSearchQuery: PropTypes.func.isRequired
 };
 
-export default SearchTaskForm;
+export default connect(
+  null,
+  { getSearchTerm }
+)(SearchTaskForm);

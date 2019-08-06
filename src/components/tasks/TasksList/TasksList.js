@@ -7,25 +7,25 @@ import "./TasksList.css";
 import { connect } from "react-redux";
 import * as taskActions from "../../../store/task/task-actions";
 
-const TasksList = ({ tasks, updateTaskAndSave, removeTask }) => {
+const TasksList = ({ tasks, updateTaskAndSave, removeTaskAndSave }) => {
   return (
     <Card style={{ height: "340px" }}>
       <Card.Body>
         {tasks.length ? (
           <ListGroup>
-            {tasks.map((task) => (
-              <ListGroup.Item key={task.id} className="task-group-item">
+            {tasks.map(({ id, done, title }) => (
+              <ListGroup.Item key={id} className="task-group-item">
                 <div
-                  onClick={() => updateTaskAndSave(task.id)}
+                  onClick={() => updateTaskAndSave(id)}
                   className={classnames("task-item", {
-                    "task-done": task.done
+                    "task-done": done
                   })}
                 >
-                  {task.title}
+                  {title}
                 </div>
 
                 <Button
-                  onClick={() => removeTask(task.id)}
+                  onClick={() => removeTaskAndSave(id)}
                   variant="link"
                   size="sm"
                   className="remove-task"

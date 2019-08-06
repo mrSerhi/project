@@ -70,8 +70,6 @@ class Tasks extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    // localStorage.setItem("tasks", JSON.stringify(this.props.tasks));
-
     // pagination
     // returns back if currentPage number is biggest than number of all pages
     // exp: allPages = 5/5 -> 1; currPage = 2; {2 > 1 and [] is not empty} -> currentPage - 1
@@ -115,7 +113,7 @@ class Tasks extends Component {
             <SortTasksBlock
               tasks={tasks}
               itemsFilter={itemsFilter}
-              setTaskFilter={this.setTaskFilter}
+              // setTaskFilter={this.setTaskFilter}
               toggleModalRemoveTasks={this.onToggleModalRemoveTasks}
             />
           </Col>
@@ -142,7 +140,9 @@ class Tasks extends Component {
   }
 }
 
-const mapStateToProps = (state) => ({ tasks: state.tasks });
+const mapStateToProps = (state) => ({
+  tasks: state.tasks.allTasks
+});
 
 export default connect(
   mapStateToProps,
