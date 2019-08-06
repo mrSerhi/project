@@ -15,9 +15,9 @@ const visibilityFilters = {
 
 const SortTasksBlock = ({
   setTaskFilter,
-  itemsFilter,
   toggleModalRemoveTasks,
-  tasks
+  tasks,
+  visibilityFilter
 }) => {
   return (
     <Card bg="info">
@@ -46,7 +46,7 @@ const SortTasksBlock = ({
                 onClick={() => setTaskFilter(visibilityFilters.SHOW_ALL)}
                 variant="outline-light"
                 className={classnames({
-                  active: itemsFilter === "all"
+                  active: visibilityFilter === visibilityFilters.SHOW_ALL
                 })}
               >
                 All
@@ -55,7 +55,7 @@ const SortTasksBlock = ({
                 onClick={() => setTaskFilter(visibilityFilters.SHOW_ACTIVE)}
                 variant="outline-light"
                 className={classnames({
-                  active: itemsFilter === "active"
+                  active: visibilityFilter === visibilityFilters.SHOW_ACTIVE
                 })}
               >
                 Active
@@ -64,7 +64,7 @@ const SortTasksBlock = ({
                 onClick={() => setTaskFilter(visibilityFilters.SHOW_COMPLETED)}
                 variant="outline-light"
                 className={classnames({
-                  active: itemsFilter === "done"
+                  active: visibilityFilter === visibilityFilters.SHOW_COMPLETED
                 })}
               >
                 Done
@@ -83,7 +83,12 @@ const SortTasksBlock = ({
 //   tasks: PropTypes.arrayOf(PropTypes.object)
 // };
 
+const mapStateToProps = (state) => ({
+  tasks: state.todo.tasks,
+  visibilityFilter: state.todo.visibilityFilter
+});
+
 export default connect(
-  null,
+  mapStateToProps,
   { setTaskFilter }
 )(SortTasksBlock);

@@ -6,6 +6,7 @@ import classnames from "classnames";
 import "./TasksList.css";
 import { connect } from "react-redux";
 import * as taskActions from "../../../store/task/task-actions";
+import { getFilteredTasksByFilter } from "../../../store/selectors";
 
 const TasksList = ({ tasks, updateTaskAndSave, removeTaskAndSave }) => {
   return (
@@ -46,7 +47,11 @@ const TasksList = ({ tasks, updateTaskAndSave, removeTaskAndSave }) => {
   );
 };
 
+const mapStateToProps = (state) => ({
+  tasks: getFilteredTasksByFilter(state)
+});
+
 export default connect(
-  null,
+  mapStateToProps,
   { ...taskActions }
 )(TasksList);

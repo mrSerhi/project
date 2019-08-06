@@ -111,9 +111,6 @@ class Tasks extends Component {
           </Col>
           <Col sm={{ span: 5 }}>
             <SortTasksBlock
-              tasks={tasks}
-              itemsFilter={itemsFilter}
-              // setTaskFilter={this.setTaskFilter}
               toggleModalRemoveTasks={this.onToggleModalRemoveTasks}
             />
           </Col>
@@ -123,9 +120,7 @@ class Tasks extends Component {
           <Col md={{ span: 6, offset: 3 }} className="d-flex flex-column mt-2">
             <AddTaskForm />
 
-            <TasksList
-              tasks={this.paginateTasks(filteredTasks, currentPage, tasksLimit)}
-            />
+            <TasksList />
 
             <Pagination
               itemsTotal={filteredTasks.length}
@@ -141,7 +136,7 @@ class Tasks extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  tasks: state.tasks.allTasks
+  tasks: state.todo.tasks
 });
 
 export default connect(

@@ -10,7 +10,7 @@ export const addTaskAndSave = ({ title, done, id }) => async (
   getState
 ) => {
   await dispatch(addTask({ title, done, id }));
-  updateTasksInStorage(getState().tasks.allTasks);
+  updateTasksInStorage(getState().todo.tasks);
 };
 
 export const UPDATE_TASK = "UPDATE_TASK";
@@ -20,7 +20,7 @@ const updateTask = (id) => ({
 });
 export const updateTaskAndSave = (id) => async (dispatch, getState) => {
   await dispatch(updateTask(id));
-  updateTasksInStorage(getState().tasks.allTasks);
+  updateTasksInStorage(getState().todo.tasks);
 };
 
 export const REMOVE_TASK = "REMOVE_TASK";
@@ -30,7 +30,7 @@ const removeTask = (id) => ({
 });
 export const removeTaskAndSave = (id) => async (dispatch, getState) => {
   await dispatch(removeTask(id));
-  updateTasksInStorage(getState().tasks.allTasks);
+  updateTasksInStorage(getState().todo.tasks);
 };
 
 export const CLEAR_COMPLETED_TASKS = "CLEAR_COMPLETED_TASKS";
