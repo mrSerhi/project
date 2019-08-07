@@ -67,7 +67,7 @@ const SortTasksBlock = ({
                   active: visibilityFilter === visibilityFilters.SHOW_COMPLETED
                 })}
               >
-                Done
+                Completed
               </Button>
             </ButtonGroup>
           </Col>
@@ -77,18 +77,16 @@ const SortTasksBlock = ({
   );
 };
 
-// SortTasksBlock.propTypes = {
-//   setTaskFilter: PropTypes.func.isRequired,
-//   itemsFilter: PropTypes.string.isRequired,
-//   tasks: PropTypes.arrayOf(PropTypes.object)
-// };
-
-const mapStateToProps = (state) => ({
-  tasks: state.todo.tasks,
-  visibilityFilter: state.todo.visibilityFilter
-});
+SortTasksBlock.propTypes = {
+  setTaskFilter: PropTypes.func.isRequired,
+  toggleModalRemoveTasks: PropTypes.func.isRequired,
+  tasks: PropTypes.arrayOf(PropTypes.object)
+};
 
 export default connect(
-  mapStateToProps,
+  (state) => ({
+    tasks: state.todo.tasks,
+    visibilityFilter: state.todo.visibilityFilter
+  }),
   { setTaskFilter }
 )(SortTasksBlock);

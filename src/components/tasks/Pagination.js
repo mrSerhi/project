@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import PropTypes from "prop-types";
 import Pagination from "react-bootstrap/Pagination";
 import PageItem from "react-bootstrap/PageItem";
 import uuid from "uuid";
@@ -12,13 +13,6 @@ const CustomPagination = ({
   limit,
   getCurrentPage
 }) => {
-  useEffect(() => {
-    const countAllPages = Math.ceil(tasksCounter / limit);
-
-    if (currentPage > countAllPages && tasksCounter > 0) {
-      getCurrentPage(currentPage - 1);
-    }
-  });
   const pages = [];
   const pagesCounter = Math.ceil(tasksCounter / limit);
 
@@ -34,16 +28,29 @@ const CustomPagination = ({
     );
   }
 
+  useEffect(() => {
+    const countAllPages = Math.ceil(tasksCounter / limit);
+
+    if (currentPage > countAllPages && tasksCounter > 0) {
+      getCurrentPage(currentPage - 1);
+    }
+  });
+
   return <Pagination className="align-self-center mt-2">{pages}</Pagination>;
 };
 
-const mapStateToProps = (state) => ({
-  tasksCounter: getFilteredTasksLength(state),
-  limit: state.todo.pagination.limit,
-  currentPage: state.todo.pagination.currentPage
-});
+CustomPagination.propTypes = {
+  tasksCounter: PropTypes.number.isRequired,
+  limit: PropTypes.number.isRequired,
+  currentPage: PropTypes.number.isRequired,
+  getCurrentPage: PropTypes.func.isRequired
+};
 
 export default connect(
-  mapStateToProps,
+  (state) => ({
+    tasksCounter: getFilteredTasksLength(state),
+    limit: state.todo.pagination.limit,
+    currentPage: state.todo.pagination.currentPage
+  }),
   { getCurrentPage }
 )(CustomPagination);

@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import { Modal, Button, Row, Col } from "react-bootstrap";
 
 const TasksRemoveModal = ({ toggleModalRemoveTasks, removeCompletedTasks }) => {
@@ -30,6 +31,11 @@ const TasksRemoveModal = ({ toggleModalRemoveTasks, removeCompletedTasks }) => {
       </Modal.Body>
     </Modal>
   );
+};
+
+TasksRemoveModal.propTypes = {
+  toggleModalRemoveTasks: PropTypes.func.isRequired,
+  removeCompletedTasks: PropTypes.func.isRequired
 };
 
 export default TasksRemoveModal;

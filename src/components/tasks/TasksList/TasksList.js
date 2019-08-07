@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import { Alert, Card, ListGroup, Button } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrashAlt, faBoxOpen } from "@fortawesome/free-solid-svg-icons";
@@ -6,10 +7,7 @@ import classnames from "classnames";
 import "./TasksList.css";
 import { connect } from "react-redux";
 import * as taskActions from "../../../store/task/task-actions";
-import {
-  // getFilteredTasksByFilter,
-  getPaginatedTasks
-} from "../../../store/selectors";
+import { getPaginatedTasks } from "../../../store/selectors";
 
 const TasksList = ({ tasks, updateTaskAndSave, removeTaskAndSave }) => {
   return (
@@ -50,12 +48,13 @@ const TasksList = ({ tasks, updateTaskAndSave, removeTaskAndSave }) => {
   );
 };
 
-const mapStateToProps = (state) => ({
-  // tasks: getFilteredTasksByFilter(state)
-  tasks: getPaginatedTasks(state)
-});
+TasksList.propTypes = {
+  tasks: PropTypes.arrayOf(PropTypes.object),
+  updateTaskAndSave: PropTypes.func.isRequired,
+  removeTaskAndSave: PropTypes.func.isRequired
+};
 
 export default connect(
-  mapStateToProps,
+  (state) => ({ tasks: getPaginatedTasks(state) }),
   { ...taskActions }
 )(TasksList);

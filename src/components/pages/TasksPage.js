@@ -1,4 +1,5 @@
-import React, { Component } from "react";
+import React, { useState, useEffect } from "react";
+import PropTypes from "prop-types";
 import { Container, Row, Col } from "react-bootstrap";
 import { connect } from "react-redux";
 import * as taskActions from "../../store/task/task-actions";
@@ -11,92 +12,57 @@ import Pagination from "../tasks/Pagination";
 import SearchTaskForm from "../tasks/SearchTaskForm";
 import TasksRemoveModal from "../modals/TasksRemoveModal";
 
-class Tasks extends Component {
-  state = {
-    tasks: [],
-    searchQuery: "",
-    itemsFilter: "all",
-    tasksRemoveModalIn: false,
-    tasksLimit: 5,
-    currentPage: 1
+const Tasks = ({ clearCompletedTasksAndSave, getAllTasks }) => {
+  const [removeTaskModalIn, setRemoveTaskModalIn] = useState(false);
+  const onToggleModalRemoveTasks = (status = false) => {
+    setRemoveTaskModalIn(status);
+  };
+  const removeCompletedTasks = () => {
+    clearCompletedTasksAndSave();
+    setRemoveTaskModalIn(false);
   };
 
-  onToggleModalRemoveTasks = (status = false) => {
-    this.setState({ tasksRemoveModalIn: status });
-  };
+  useEffect(() => {
+    getAllTasks();
+  });
+  return (
+    <Container className="mt-3">
+      {!!removeTaskModalIn && (
+        <TasksRemoveModal
+          toggleModalRemoveTasks={onToggleModalRemoveTasks}
+          removeCompletedTasks={removeCompletedTasks}
+        />
+      )}
 
-  removeCompletedTasks = () => {
-    this.props.clearCompletedTasksAndSave();
-    this.setState({
-      tasksRemoveModalIn: false
-    });
-  };
+      <Row>
+        <Col sm={{ span: 7 }}>
+          <SearchTaskForm />
+        </Col>
 
-  paginateTasks = (tasks, currentPage, tasksLimit) => {
-    const offset = currentPage * tasksLimit;
-    const index = offset - tasksLimit;
+        <Col sm={{ span: 5 }}>
+          <SortTasksBlock toggleModalRemoveTasks={onToggleModalRemoveTasks} />
+        </Col>
+      </Row>
 
-    return tasks.slice(index, offset);
-  };
+      <Row>
+        <Col md={{ span: 6, offset: 3 }} className="d-flex flex-column mt-2">
+          <AddTaskForm />
 
-  onPaginateChangeCurrentPage = (page) => this.setState({ currentPage: page });
+          <TasksList />
 
-  componentDidMount() {
-    this.props.getAllTasks();
-  }
+          <Pagination />
+        </Col>
+      </Row>
+    </Container>
+  );
+};
 
-  componentDidUpdate(prevProps, prevState) {
-    // pagination
-    // returns back if currentPage number is biggest than number of all pages
-    // exp: allPages = 5/5 -> 1; currPage = 2; {2 > 1 and [] is not empty} -> currentPage - 1
-    const { tasks, tasksLimit } = this.state;
-    const countAllPages = Math.ceil(tasks.length / tasksLimit);
-
-    if (prevState.currentPage > countAllPages && tasks.length) {
-      this.setState({ currentPage: prevState.currentPage - 1 });
-    }
-  }
-
-  render() {
-    return (
-      <Container className="mt-3">
-        {!!this.state.tasksRemoveModalIn && (
-          <TasksRemoveModal
-            toggleModalRemoveTasks={this.onToggleModalRemoveTasks}
-            removeCompletedTasks={this.removeCompletedTasks}
-          />
-        )}
-
-        <Row>
-          <Col sm={{ span: 7 }}>
-            <SearchTaskForm setSearchQuery={this.setSearchQuery} />
-          </Col>
-          <Col sm={{ span: 5 }}>
-            <SortTasksBlock
-              toggleModalRemoveTasks={this.onToggleModalRemoveTasks}
-            />
-          </Col>
-        </Row>
-
-        <Row>
-          <Col md={{ span: 6, offset: 3 }} className="d-flex flex-column mt-2">
-            <AddTaskForm />
-
-            <TasksList />
-
-            <Pagination />
-          </Col>
-        </Row>
-      </Container>
-    );
-  }
-}
-
-const mapStateToProps = (state) => ({
-  tasks: state.todo.tasks
-});
+Tasks.propTypes = {
+  clearCompletedTasksAndSave: PropTypes.func.isRequired,
+  getAllTasks: PropTypes.func.isRequired
+};
 
 export default connect(
-  mapStateToProps,
+  null,
   { ...taskActions }
 )(Tasks);
