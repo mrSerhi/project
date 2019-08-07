@@ -9,7 +9,7 @@ import {
   faListAlt
 } from "@fortawesome/free-solid-svg-icons";
 
-const TodoNavbar = ({ currentUser, logout }) => {
+const TodoNavbar = ({ currentUser = { id: "fdfdf343" }, logout }) => {
   return (
     <Navbar bg="info" variant="dark" expand="lg">
       <Container>

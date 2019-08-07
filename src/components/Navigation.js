@@ -8,24 +8,25 @@ import SignUpPage from "./pages/SignUpPage";
 import PrivateRoute from "./hoc/PrivateRoute";
 import PublicRoute from "./hoc/PublicRoute";
 
-const Navigation = ({ currentUser, setCurrentUser, users, addNewUser }) => {
+const Navigation = () => {
   return (
     <Switch>
-      <PrivateRoute exact path="/" authUser={currentUser} component={Tasks} />
+      <PrivateRoute
+        exact
+        path="/"
+        isAuth={{ id: "4343fgllgrg" }}
+        component={Tasks}
+      />
 
       <PublicRoute
         path="/login"
-        authUser={currentUser}
-        users={users}
-        setCurrentUser={setCurrentUser}
+        isAuth={{ id: "4343fgllgrg" }}
         component={LoginPage}
       />
 
       <PublicRoute
         path="/sign-up"
-        authUser={currentUser}
-        users={users}
-        addNewUser={addNewUser}
+        isAuth={{ id: "4343fgllgrg" }}
         component={SignUpPage}
       />
 
