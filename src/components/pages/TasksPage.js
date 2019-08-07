@@ -26,34 +26,10 @@ class Tasks extends Component {
   };
 
   removeCompletedTasks = () => {
-    this.props.clearCompletedTasks();
+    this.props.clearCompletedTasksAndSave();
     this.setState({
       tasksRemoveModalIn: false
     });
-  };
-
-  setSearchQuery = (searchQuery) => this.setState({ searchQuery });
-
-  setTaskFilter = (filter) => this.setState({ itemsFilter: filter });
-
-  getFilteredTasks = (tasks, filter, searchQuery) => {
-    const preparedQuery = searchQuery.trim().toLowerCase();
-
-    if (filter === "done") {
-      return tasks.filter(
-        (task) => task.done && task.title.toLowerCase().includes(preparedQuery)
-      );
-    }
-
-    if (filter === "active") {
-      return tasks.filter(
-        (task) => !task.done && task.title.toLowerCase().includes(preparedQuery)
-      );
-    }
-
-    return tasks.filter(
-      (task) => task && task.title.toLowerCase().includes(preparedQuery)
-    );
   };
 
   paginateTasks = (tasks, currentPage, tasksLimit) => {
@@ -82,23 +58,9 @@ class Tasks extends Component {
   }
 
   render() {
-    const {
-      // tasks,
-      itemsFilter,
-      searchQuery,
-      currentPage,
-      tasksLimit,
-      tasksRemoveModalIn
-    } = this.state;
-    const { tasks } = this.props;
-    const filteredTasks = this.getFilteredTasks(
-      tasks,
-      itemsFilter,
-      searchQuery
-    );
     return (
       <Container className="mt-3">
-        {!!tasksRemoveModalIn && (
+        {!!this.state.tasksRemoveModalIn && (
           <TasksRemoveModal
             toggleModalRemoveTasks={this.onToggleModalRemoveTasks}
             removeCompletedTasks={this.removeCompletedTasks}
@@ -122,12 +84,7 @@ class Tasks extends Component {
 
             <TasksList />
 
-            <Pagination
-              itemsTotal={filteredTasks.length}
-              itemsLimit={tasksLimit}
-              currentPage={currentPage}
-              paginate={this.onPaginateChangeCurrentPage}
-            />
+            <Pagination />
           </Col>
         </Row>
       </Container>

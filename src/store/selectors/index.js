@@ -24,3 +24,21 @@ export const getFilteredTasksByFilter = createSelector(
     }
   }
 );
+
+// pagination
+export const getFilteredTasksLength = createSelector(
+  getFilteredTasksByFilter,
+  (tasks) => tasks.length
+);
+
+const getLimit = (state) => state.todo.pagination.limit;
+const getCurrentPage = (state) => state.todo.pagination.currentPage;
+export const getPaginatedTasks = createSelector(
+  [getFilteredTasksByFilter, getLimit, getCurrentPage],
+  (tasks, limit, currentPage) => {
+    const offset = currentPage * limit;
+    const index = offset - limit;
+
+    return tasks.slice(index, offset);
+  }
+);

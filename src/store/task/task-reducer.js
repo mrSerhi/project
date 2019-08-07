@@ -4,7 +4,10 @@ const initState = {
   tasks: [],
   searchTerm: "",
   visibilityFilter: "SHOW_ALL",
-  pagination: {}
+  pagination: {
+    limit: 5,
+    currentPage: 1
+  }
 };
 
 export default function todo(state = initState, action) {
@@ -47,6 +50,11 @@ export default function todo(state = initState, action) {
       return {
         ...state,
         visibilityFilter: action.payload
+      };
+    case taskTypes.GET_CURRENT_PAGE:
+      return {
+        ...state,
+        pagination: { ...state.pagination, currentPage: action.payload }
       };
     default:
       return state;

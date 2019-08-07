@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { getSearchTerm } from "../../store/task/task-actions";
 
-const SearchTaskForm = ({ setSearchQuery, getSearchTerm }) => {
+const SearchTaskForm = ({ getSearchTerm }) => {
   return (
     <Card bg="info" text="light" className="mb-3">
       <Card.Body>
@@ -26,7 +26,7 @@ const SearchTaskForm = ({ setSearchQuery, getSearchTerm }) => {
 };
 
 SearchTaskForm.propTypes = {
-  setSearchQuery: PropTypes.func.isRequired
+  getSearchTerm: PropTypes.func.isRequired
 };
 
 export default connect(

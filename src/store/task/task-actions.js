@@ -34,9 +34,13 @@ export const removeTaskAndSave = (id) => async (dispatch, getState) => {
 };
 
 export const CLEAR_COMPLETED_TASKS = "CLEAR_COMPLETED_TASKS";
-export const clearCompletedTasks = () => ({
+const clearCompletedTasks = () => ({
   type: CLEAR_COMPLETED_TASKS
 });
+export const clearCompletedTasksAndSave = () => async (dispatch, getState) => {
+  await dispatch(clearCompletedTasks());
+  updateTasksInStorage(getState().todo.tasks);
+};
 
 export const GET_ALL_TASKS = "GET_ALL_TASKS";
 export const getAllTasks = () => ({
@@ -56,7 +60,13 @@ export const setTaskFilter = (filter) => ({
   payload: filter
 });
 
-// for this module
+export const GET_CURRENT_PAGE = "GET_CURRENT_PAGE";
+export const getCurrentPage = (page) => ({
+  type: GET_CURRENT_PAGE,
+  payload: page
+});
+
+// save updated tasks to Storage
 function updateTasksInStorage(tasks) {
   localStorage.setItem("tasks", JSON.stringify(tasks));
 }
