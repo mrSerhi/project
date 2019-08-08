@@ -132,7 +132,7 @@ class LoginForm extends Component {
                           value={values.email}
                           onChange={handleChange}
                           onBlur={handleBlur}
-                          isInvalid={errors.email && touched.email}
+                          isInvalid={!!errors.email && touched.email}
                           isValid={touched.email && !errors.email}
                           placeholder="your.awesome@gmail.com"
                         />

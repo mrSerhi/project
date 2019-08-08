@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Container, Row, Col, Form, Button, Alert } from "react-bootstrap";
 import { Formik } from "formik";
 import * as Yup from "yup";
-import FormInput from "../ui/FormInput";
+import InputWrapper from "../ui/InputWrapper";
 import { connect } from "react-redux";
 
 const restoreEmailSchema = Yup.object().shape({
@@ -57,19 +57,31 @@ class RestoreEmailForm extends Component {
               onSubmit={this.handleSubmitForm}
               validationSchema={restoreEmailSchema}
             >
-              {({ handleSubmit, handleChange, values, errors, touched }) => (
+              {({
+                handleSubmit,
+                handleChange,
+                handleBlur,
+                values,
+                errors,
+                touched
+              }) => (
                 <Form noValidate onSubmit={handleSubmit}>
-                  <FormInput
+                  <InputWrapper
                     id="validation-username-restore-form"
-                    type="text"
-                    name="username"
-                    value={values.username}
-                    onChange={handleChange}
-                    errors={errors}
-                    touched={touched}
                     label="Username"
-                    placeholder="Type your username"
-                  />
+                    error={errors.username}
+                  >
+                    <Form.Control
+                      type="text"
+                      name="username"
+                      value={values.username}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      isInvalid={!!errors.username && touched.username}
+                      isValid={touched.username && !errors.username}
+                      placeholder="Type your username"
+                    />
+                  </InputWrapper>
 
                   <Button type="submit" variant="info">
                     Send

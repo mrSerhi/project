@@ -1,4 +1,5 @@
 import uuid from "uuid";
+import { updateTasksInStorage } from "../../utils/localStorage-utils";
 
 export const ADD_TASK = "ADD_TASK";
 const addTask = ({ title, done = false }) => ({
@@ -65,8 +66,3 @@ export const getCurrentPage = (page) => ({
   type: GET_CURRENT_PAGE,
   payload: page
 });
-
-// save updated tasks to Storage
-function updateTasksInStorage(tasks) {
-  localStorage.setItem("tasks", JSON.stringify(tasks));
-}
