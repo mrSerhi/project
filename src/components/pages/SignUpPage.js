@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPaperPlane } from "@fortawesome/free-solid-svg-icons";
 import { Formik } from "formik";
 import * as Yup from "yup";
-import FormInput from "../ui/FormInput";
+import InputWrapper from "../ui/InputWrapper";
 import { connect } from "react-redux";
 import { signUpAndSave } from "../../store/auth/auth-actions";
 
@@ -86,58 +86,83 @@ class SignUpForm extends Component {
                   {({
                     handleSubmit,
                     handleChange,
+                    handleBlur,
                     values,
                     errors,
                     touched
                   }) => (
                     <Form noValidate onSubmit={handleSubmit}>
-                      <FormInput
+                      <InputWrapper
                         id="validate-signup-username"
                         label="Username"
-                        type="text"
-                        name="username"
-                        value={values.username}
-                        onChange={handleChange}
-                        errors={errors}
-                        touched={touched}
-                        placeholder="Type account username"
-                      />
+                        error={errors.username}
+                      >
+                        <Form.Control
+                          type="text"
+                          name="username"
+                          value={values.username}
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          isInvalid={!!errors.username && touched.username}
+                          isValid={touched.username && !errors.username}
+                          placeholder="Type account username"
+                        />
+                      </InputWrapper>
 
-                      <FormInput
+                      <InputWrapper
                         id="validate-signup-email"
                         label="Email"
-                        type="email"
-                        name="email"
-                        value={values.email}
-                        onChange={handleChange}
-                        errors={errors}
-                        touched={touched}
-                        placeholder="Type account email"
-                      />
+                        error={errors.email}
+                      >
+                        <Form.Control
+                          type="email"
+                          name="email"
+                          value={values.email}
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          isInvalid={!!errors.email && touched.email}
+                          isValid={touched.email && !errors.email}
+                          placeholder="Type email"
+                        />
+                      </InputWrapper>
 
-                      <FormInput
+                      <InputWrapper
                         id="validate-signup-password"
                         label="Password"
-                        type="password"
-                        name="password"
-                        value={values.password}
-                        onChange={handleChange}
-                        errors={errors}
-                        touched={touched}
-                        placeholder="Type account password"
-                      />
+                        error={errors.password}
+                      >
+                        <Form.Control
+                          type="password"
+                          name="password"
+                          value={values.password}
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          isInvalid={!!errors.password && touched.password}
+                          isValid={touched.password && !errors.password}
+                          placeholder="Type password"
+                        />
+                      </InputWrapper>
 
-                      <FormInput
+                      <InputWrapper
                         id="validate-signup-confirm-password"
                         label="Confirm password"
-                        type="password"
-                        name="confirmPassword"
-                        value={values.confirmPassword}
-                        onChange={handleChange}
-                        errors={errors}
-                        touched={touched}
-                        placeholder="Confirm password"
-                      />
+                        error={errors.confirmPassword}
+                      >
+                        <Form.Control
+                          type="password"
+                          name="confirmPassword"
+                          value={values.confirmPassword}
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          isInvalid={
+                            !!errors.confirmPassword && touched.confirmPassword
+                          }
+                          isValid={
+                            touched.confirmPassword && !errors.confirmPassword
+                          }
+                          placeholder="Confirm password"
+                        />
+                      </InputWrapper>
 
                       <Button type="submit" variant="info">
                         Sign Up <FontAwesomeIcon icon={faPaperPlane} />

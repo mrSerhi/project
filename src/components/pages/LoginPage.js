@@ -16,7 +16,7 @@ import { Formik } from "formik";
 import * as Yup from "yup";
 import { Link } from "react-router-dom";
 import RestoreEmailForm from "../tasks/RestoreEmailForm";
-import FormInput from "../ui/FormInput";
+import InputWrapper from "../ui/InputWrapper";
 import { connect } from "react-redux";
 import { logInAndSave } from "../../store/auth/auth-actions";
 
@@ -73,7 +73,6 @@ class LoginForm extends Component {
 
   render() {
     const { restoreEmailModalIn } = this.state;
-    const { users } = this.props;
     return (
       <Container className="mb-5">
         {restoreEmailModalIn && (
@@ -85,7 +84,7 @@ class LoginForm extends Component {
               <Modal.Title>Restore Email</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-              <RestoreEmailForm users={users} />
+              <RestoreEmailForm />
             </Modal.Body>
           </Modal>
         )}
@@ -116,34 +115,45 @@ class LoginForm extends Component {
                   {({
                     handleSubmit,
                     handleChange,
+                    handleBlur,
                     values,
                     errors,
                     touched
                   }) => (
                     <Form noValidate onSubmit={handleSubmit}>
-                      <FormInput
+                      <InputWrapper
                         id="validate-login-email"
                         label="Email"
-                        type="email"
-                        name="email"
-                        value={values.email}
-                        onChange={handleChange}
-                        errors={errors}
-                        touched={touched}
-                        placeholder="your.awesome@gmail.com"
-                      />
+                        error={errors.email}
+                      >
+                        <Form.Control
+                          type="email"
+                          name="email"
+                          value={values.email}
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          isInvalid={errors.email && touched.email}
+                          isValid={touched.email && !errors.email}
+                          placeholder="your.awesome@gmail.com"
+                        />
+                      </InputWrapper>
 
-                      <FormInput
+                      <InputWrapper
                         id="validate-login-password"
                         label="Password"
-                        type="password"
-                        name="password"
-                        value={values.password}
-                        onChange={handleChange}
-                        errors={errors}
-                        touched={touched}
-                        placeholder="Password"
-                      />
+                        error={errors.password}
+                      >
+                        <Form.Control
+                          type="password"
+                          name="password"
+                          value={values.password}
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          isInvalid={!!errors.password && touched.password}
+                          isValid={touched.password && !errors.password}
+                          placeholder="Password"
+                        />
+                      </InputWrapper>
 
                       <Button type="submit" variant="info">
                         Log In <FontAwesomeIcon icon={faPaperPlane} />

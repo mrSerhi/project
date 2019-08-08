@@ -3,6 +3,7 @@ import { Container, Row, Col, Form, Button, Alert } from "react-bootstrap";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import FormInput from "../ui/FormInput";
+import { connect } from "react-redux";
 
 const restoreEmailSchema = Yup.object().shape({
   username: Yup.string()
@@ -31,6 +32,8 @@ class RestoreEmailForm extends Component {
       this.setState({ sendVerification: true });
       actions.resetForm(this.state);
     } else {
+      this.setState({ sendVerification: false });
+
       return actions.setErrors(errors);
     }
   };
@@ -80,7 +83,7 @@ class RestoreEmailForm extends Component {
         {sendVerification && (
           <Alert variant="success" className="mt-3">
             <p className="text-center">
-              Instructions sent successfully. Check you email...
+              Instructions sent successfully. Check your email...
             </p>
           </Alert>
         )}
@@ -89,4 +92,6 @@ class RestoreEmailForm extends Component {
   }
 }
 
-export default RestoreEmailForm;
+export default connect((state) => ({ users: state.auth.users }))(
+  RestoreEmailForm
+);
