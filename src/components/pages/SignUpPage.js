@@ -1,12 +1,13 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import uuid from "uuid";
 import { Container, Row, Col, Form, Button, Card } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPaperPlane } from "@fortawesome/free-solid-svg-icons";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import FormInput from "../ui/FormInput";
+import { connect } from "react-redux";
+import { signUpAndSave } from "../../store/auth/auth-actions";
 
 // validation YUP schema
 const signUpSchema = Yup.object().shape({
@@ -27,7 +28,7 @@ const signUpSchema = Yup.object().shape({
 
 class SignUpForm extends Component {
   static propTypes = {
-    addNewUser: PropTypes.func.isRequired,
+    signUpAndSave: PropTypes.func.isRequired,
     users: PropTypes.arrayOf(PropTypes.object).isRequired
   };
 
@@ -40,7 +41,7 @@ class SignUpForm extends Component {
 
   handleSubmitForm = (values, actions) => {
     const errors = {};
-    const { users, addNewUser, history } = this.props;
+    const { users, signUpAndSave, history } = this.props;
 
     if (users.length) {
       users.find((user) => {
@@ -57,8 +58,7 @@ class SignUpForm extends Component {
     }
 
     if (!Object.keys(errors).length) {
-      addNewUser({
-        id: uuid(),
+      signUpAndSave({
         username: values.username,
         email: values.email,
         password: values.password
@@ -154,4 +154,7 @@ class SignUpForm extends Component {
   }
 }
 
-export default SignUpForm;
+export default connect(
+  (state) => ({ users: state.auth.users }),
+  { signUpAndSave }
+)(SignUpForm);

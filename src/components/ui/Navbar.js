@@ -8,8 +8,10 @@ import {
   faSignOutAlt,
   faListAlt
 } from "@fortawesome/free-solid-svg-icons";
+import { connect } from "react-redux";
+import { logOut } from "../../store/auth/auth-actions";
 
-const TodoNavbar = ({ currentUser = { id: "fdfdf343" }, logout }) => {
+const TodoNavbar = ({ isAuth, logOut }) => {
   return (
     <Navbar bg="info" variant="dark" expand="lg">
       <Container>
@@ -18,7 +20,7 @@ const TodoNavbar = ({ currentUser = { id: "fdfdf343" }, logout }) => {
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="todo-navbar-nav" />
         <Navbar.Collapse id="todo-navbar-nav">
-          {!currentUser.id ? (
+          {!isAuth.id ? (
             <Nav className="ml-auto">
               <Nav.Link as={NavLink} to="/sign-up" activeClassName="active">
                 Sign up
@@ -29,7 +31,7 @@ const TodoNavbar = ({ currentUser = { id: "fdfdf343" }, logout }) => {
             </Nav>
           ) : (
             <Nav className="ml-auto">
-              <Nav.Link as={NavLink} to="/login" onClick={logout}>
+              <Nav.Link as={NavLink} to="/login" onClick={logOut}>
                 Log out <FontAwesomeIcon icon={faSignOutAlt} />
               </Nav.Link>
             </Nav>
@@ -40,4 +42,9 @@ const TodoNavbar = ({ currentUser = { id: "fdfdf343" }, logout }) => {
   );
 };
 
-export default withRouter(TodoNavbar);
+export default withRouter(
+  connect(
+    (state) => ({ isAuth: state.auth.isAuth }),
+    { logOut }
+  )(TodoNavbar)
+);

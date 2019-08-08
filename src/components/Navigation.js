@@ -6,29 +6,15 @@ import Tasks from "./pages/TasksPage";
 import LoginPage from "./pages/LoginPage";
 import SignUpPage from "./pages/SignUpPage";
 import PrivateRoute from "./hoc/PrivateRoute";
-import PublicRoute from "./hoc/PublicRoute";
 
 const Navigation = () => {
   return (
     <Switch>
-      <PrivateRoute
-        exact
-        path="/"
-        isAuth={{ id: "4343fgllgrg" }}
-        component={Tasks}
-      />
+      <PrivateRoute exact path="/" isLogged={true} component={Tasks} />
 
-      <PublicRoute
-        path="/login"
-        isAuth={{ id: "4343fgllgrg" }}
-        component={LoginPage}
-      />
+      <PrivateRoute path="/login" isGuest={true} component={LoginPage} />
 
-      <PublicRoute
-        path="/sign-up"
-        isAuth={{ id: "4343fgllgrg" }}
-        component={SignUpPage}
-      />
+      <PrivateRoute path="/sign-up" isGuest={true} component={SignUpPage} />
 
       <Route render={() => <h1>Page is not found...</h1>} />
     </Switch>

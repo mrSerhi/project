@@ -17,6 +17,8 @@ import * as Yup from "yup";
 import { Link } from "react-router-dom";
 import RestoreEmailForm from "../tasks/RestoreEmailForm";
 import FormInput from "../ui/FormInput";
+import { connect } from "react-redux";
+import { logInAndSave } from "../../store/auth/auth-actions";
 
 const signInSchema = Yup.object().shape({
   email: Yup.string()
@@ -29,7 +31,7 @@ const signInSchema = Yup.object().shape({
 
 class LoginForm extends Component {
   static propTypes = {
-    setCurrentUser: PropTypes.func.isRequired,
+    logInAndSave: PropTypes.func.isRequired,
     users: PropTypes.arrayOf(PropTypes.object).isRequired
   };
 
@@ -41,14 +43,15 @@ class LoginForm extends Component {
 
   handleSubmitForm = (values, actions) => {
     const { email, password } = values;
-    const currentUser = this.props.users.find((user) => user.email === email);
+    const { users, logInAndSave, history } = this.props;
+    const isAuth = users.find((user) => user.email === email);
     const errors = {};
 
-    if (currentUser === undefined || !Object.keys(currentUser).length) {
+    if (isAuth === undefined || !Object.keys(isAuth).length) {
       errors.email = "User is not found...";
       errors.password = "Password is not found";
     } else {
-      if (currentUser.password !== password) {
+      if (isAuth.password !== password) {
         errors.email = "Try to change email or password";
         errors.password = "Email or password is invalid...";
       }
@@ -56,10 +59,9 @@ class LoginForm extends Component {
 
     if (!Object.keys(errors).length) {
       actions.resetForm(this.state);
-      localStorage.setItem("current-user", JSON.stringify(currentUser));
-      this.props.setCurrentUser(currentUser);
+      logInAndSave(isAuth);
 
-      this.props.history.push("/");
+      history.push("/");
     } else {
       return actions.setErrors(errors);
     }
@@ -165,4 +167,7 @@ class LoginForm extends Component {
   }
 }
 
-export default LoginForm;
+export default connect(
+  (state) => ({ users: state.auth.users }),
+  { logInAndSave }
+)(LoginForm);
