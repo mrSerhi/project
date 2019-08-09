@@ -5,8 +5,8 @@ import { Route, Switch } from "react-router-dom";
 import Tasks from "./pages/TasksPage";
 import LoginPage from "./pages/LoginPage";
 import SignUpPage from "./pages/SignUpPage";
-import PrivateRoute from "./hoc/PrivateRoute";
-import PublicRoute from "./hoc/PublicRoute";
+import PrivateRoute from "./routes/PrivateRoute";
+import PublicRoute from "./routes/PublicRoute";
 
 const Navigation = () => {
   return (

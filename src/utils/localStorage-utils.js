@@ -11,6 +11,6 @@ export const getUsersDataFromStorage = () => ({
   isAuth: JSON.parse(localStorage.getItem("isAuth"))
 });
 
-export const updateTasksInStorage = (tasks) => {
+export const saveTasksInStorage = (tasks) => {
   localStorage.setItem("tasks", JSON.stringify(tasks));
 };

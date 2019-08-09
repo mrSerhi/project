@@ -1,5 +1,5 @@
 import uuid from "uuid";
-import { updateTasksInStorage } from "../../utils/localStorage-utils";
+import { saveTasksInStorage } from "../../utils/localStorage-utils";
 
 export const ADD_TASK = "ADD_TASK";
 const addTask = ({ title, done = false }) => ({
@@ -11,7 +11,7 @@ export const addTaskAndSave = ({ title, done, id }) => async (
   getState
 ) => {
   await dispatch(addTask({ title, done, id }));
-  updateTasksInStorage(getState().todo.tasks);
+  saveTasksInStorage(getState().todo.tasks);
 };
 
 export const UPDATE_TASK = "UPDATE_TASK";
@@ -21,7 +21,7 @@ const updateTask = (id) => ({
 });
 export const updateTaskAndSave = (id) => async (dispatch, getState) => {
   await dispatch(updateTask(id));
-  updateTasksInStorage(getState().todo.tasks);
+  saveTasksInStorage(getState().todo.tasks);
 };
 
 export const REMOVE_TASK = "REMOVE_TASK";
@@ -31,7 +31,7 @@ const removeTask = (id) => ({
 });
 export const removeTaskAndSave = (id) => async (dispatch, getState) => {
   await dispatch(removeTask(id));
-  updateTasksInStorage(getState().todo.tasks);
+  saveTasksInStorage(getState().todo.tasks);
 };
 
 export const CLEAR_COMPLETED_TASKS = "CLEAR_COMPLETED_TASKS";
@@ -40,7 +40,7 @@ const clearCompletedTasks = () => ({
 });
 export const clearCompletedTasksAndSave = () => async (dispatch, getState) => {
   await dispatch(clearCompletedTasks());
-  updateTasksInStorage(getState().todo.tasks);
+  saveTasksInStorage(getState().todo.tasks);
 };
 
 export const GET_ALL_TASKS = "GET_ALL_TASKS";
