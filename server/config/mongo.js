@@ -6,5 +6,8 @@ export const connectDb = () => {
   return mongoose
     .connect(DB_URL, { useNewUrlParser: true, useFindAndModify: false })
     .then(() => console.log("MongoDB successfully connected"))
-    .catch((exp) => console.error(exp));
+    .catch((exp) => {
+      console.error(exp);
+      process.exit();
+    });
 };

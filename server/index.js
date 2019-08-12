@@ -5,5 +5,5 @@ const port = process.env.PORT || 5000;
 
 // connect to mongoDB and run dev server
 connectDb().then(async () => {
-  app.listen(port, () => console.info(`App is running on ${port} port`));
+  app.listen(port, () => console.info(`App listening at ${port} port`));
 });
