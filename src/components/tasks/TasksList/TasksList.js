@@ -7,7 +7,7 @@ import classnames from "classnames";
 import "./TasksList.css";
 import { connect } from "react-redux";
 import * as taskActions from "../../../store/task/task-actions";
-import { getPaginatedTasks } from "../../../store/selectors";
+import { getPaginatedTasks } from "../../../store/task/selectors";
 
 const TasksList = ({ tasks, updateTaskAndSave, removeTaskAndSave }) => {
   return (

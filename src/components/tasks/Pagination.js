@@ -4,7 +4,7 @@ import Pagination from "react-bootstrap/Pagination";
 import PageItem from "react-bootstrap/PageItem";
 import uuid from "uuid";
 import { connect } from "react-redux";
-import { getFilteredTasksLength } from "../../store/selectors";
+import { getFilteredTasksLength } from "../../store/task/selectors";
 import { getCurrentPage } from "../../store/task/task-actions";
 
 const CustomPagination = ({
