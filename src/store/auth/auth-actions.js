@@ -6,8 +6,11 @@ const signUp = ({ username, email, password }) => ({
   type: SIGN_UP,
   payload: { id: uuid(), username, email, password }
 });
-export const signUpAndSave = ({ ...rest }) => async (dispatch, getState) => {
-  await dispatch(signUp(rest));
+export const signUpAndSave = ({ username, email, password }) => async (
+  dispatch,
+  getState
+) => {
+  await dispatch(signUp({ username, email, password }));
   storageUtils.saveUsersToStorage(getState().auth.users);
 };
 
@@ -18,7 +21,7 @@ const logIn = (user) => ({
 });
 export const logInAndSave = (user) => async (dispatch, getState) => {
   await dispatch(logIn(user));
-  storageUtils.saveAuthUserToStorage(getState().auth.isAuth);
+  storageUtils.saveAuthUserToStorage(getState().auth.authUser);
 };
 
 export const LOG_OUT = "LOG_OUT";

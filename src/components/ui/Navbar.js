@@ -11,7 +11,7 @@ import {
 import { connect } from "react-redux";
 import { logOut } from "../../store/auth/auth-actions";
 
-const TodoNavbar = ({ isAuth, logOut }) => {
+const TodoNavbar = ({ authUser, logOut }) => {
   return (
     <Navbar bg="info" variant="dark" expand="lg">
       <Container>
@@ -20,7 +20,7 @@ const TodoNavbar = ({ isAuth, logOut }) => {
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="todo-navbar-nav" />
         <Navbar.Collapse id="todo-navbar-nav">
-          {!isAuth.id ? (
+          {!authUser.id ? (
             <Nav className="ml-auto">
               <Nav.Link as={NavLink} to="/sign-up" activeClassName="active">
                 Sign up
@@ -44,7 +44,7 @@ const TodoNavbar = ({ isAuth, logOut }) => {
 
 export default withRouter(
   connect(
-    (state) => ({ isAuth: state.auth.isAuth }),
+    (state) => ({ authUser: state.auth.authUser }),
     { logOut }
   )(TodoNavbar)
 );

@@ -2,15 +2,15 @@ import React from "react";
 import { Route, Redirect } from "react-router-dom";
 import { connect } from "react-redux";
 
-const PrivateRoute = ({ component: Component, isAuth, ...rest }) => (
+const PrivateRoute = ({ component: Component, authUser, ...rest }) => (
   <Route
     {...rest}
     render={(props) => {
-      return isAuth.id ? <Component {...props} /> : <Redirect to="/login" />;
+      return authUser.id ? <Component {...props} /> : <Redirect to="/login" />;
     }}
   />
 );
 
-export default connect((state) => ({ isAuth: state.auth.isAuth }))(
+export default connect((state) => ({ authUser: state.auth.authUser }))(
   PrivateRoute
 );

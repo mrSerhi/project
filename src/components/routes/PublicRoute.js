@@ -2,11 +2,11 @@ import React from "react";
 import { Route, Redirect } from "react-router-dom";
 import { connect } from "react-redux";
 
-const PublicRoute = ({ component: Component, isAuth, ...rest }) => (
+const PublicRoute = ({ component: Component, authUser, ...rest }) => (
   <Route
     {...rest}
     render={(props) => {
-      return isAuth.id ? (
+      return authUser.id ? (
         <Redirect to="/" />
       ) : (
         <Component {...props} {...rest} />
@@ -15,4 +15,6 @@ const PublicRoute = ({ component: Component, isAuth, ...rest }) => (
   />
 );
 
-export default connect((state) => ({ isAuth: state.auth.isAuth }))(PublicRoute);
+export default connect((state) => ({ authUser: state.auth.authUser }))(
+  PublicRoute
+);
